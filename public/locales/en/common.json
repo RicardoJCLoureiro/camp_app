@@ -1,0 +1,208 @@
+{
+  "login": {
+    "title": "Only for members",
+    "usernameLabel": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "submit": "Login",
+    "loading": "Logging in…",
+    "success": "Login successful!",
+    "failure": "Login failed. Please try again.",
+    "emailNotFound": "That email address is not registered.",
+    "wrongPassword": "The password you entered is incorrect.",
+    "unexpectedError": "An unexpected error occurred. Please try later.",
+    "missingEmail": "Please enter your email.",
+    "forgotPassword": "Forgot password?",
+    "enterMfaCode": "Enter the authentication code from your app",
+    "mfaCodeLabel": "Authenticator code",
+    "mfaCodePlaceholder": "123456",
+    "verifyMfa": "Verify code",
+    "backToCredentials": "Back to login",
+    "scanMfaQr": "Scan this QR code in your authenticator app",
+    "scanMfaQrInstructions": "Open your authenticator app and scan the QR code below",
+    "manualEntryKey": "Or enter this key manually",
+    "next": "Continue"
+  },
+  "forgotPassword": {
+    "header": "Reset your password",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "submit": "Send reset link",
+    "backToLogin": "Back to login",
+    "resetLinkSent": "If an account with that email exists, a reset link has been sent.",
+    "tooManyRequests": "Too many requests. Please try again later.",
+    "unexpectedError": "An error occurred. Please try again later."
+  },
+  "forgotPasswordReq": {
+    "header": "Reset your password",
+    "newPasswordLabel": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPasswordLabel": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your new password",
+    "mfaCodeLabel": "Authenticator code",
+    "mfaCodePlaceholder": "123456",
+    "complexityLabel": "Password strength",
+    "loadingButton": "Resetting…",
+    "resetButton": "Reset Password",
+    "missingFields": "Please fill out all fields.",
+    "passwordMismatch": "Passwords do not match.",
+    "weakPassword": "Your password is too weak (min. 7/10 required).",
+    "invalidOrExpiredToken": "This reset link is invalid or has expired. Please request a new one.",
+    "mfaNotSetup": "MFA is not set up for your account.",
+    "invalidMfaCode": "Invalid authentication code.",
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "success": "Your password has been reset successfully!",
+    "resetFailed": "Password reset failed. Please try again."
+  },
+  "sessionWarningModal": {
+    "header": "Your session is about to expire",
+    "body": "Your session will expire soon. Would you like to extend it?",
+    "timeRemaining": "Time remaining",
+    "extendSession": "Extend Session",
+    "logout": "Log Out",
+    "inactivityHeader": "Are you still there?",
+    "redirectMessage": "You’ve been inactive and will be logged out soon.",
+    "stay": "Stay Logged In",
+    "expiredToast": "Your session has expired. Please log in again."
+  },
+  "auth": {
+    "requiredToast": "You must be logged in to access the dashboard.",
+    "loggedOutToast": "You have been logged out."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "avatarAlt": "User avatar",
+    "refresh": "Refresh",
+    "logout": "Log Out",
+
+    "menu": {
+      "administration": "Administration",
+      "users": "Users",
+      "entities": "Entities",
+      "roles": "Roles",
+      "modules-definition": "Modules Definition",
+      "components-definition": "Components Definition"
+    },
+
+    "tooltip": {
+      "edit": "Edit entity",
+      "delete": "Delete entity"
+    },
+
+    "newEntity": "Create new entity",
+    "createEntity": "Create New Entity",
+    "entityName": "Entity name",
+    "entityNamePlaceholder": "e.g., Liga Portuguesa de Futebol",
+    "createdBy": "Created By",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "loading": "Loading…",
+    "noEntities": "No entities found.",
+    "createEntityPlaceholder": "Create-entity flow launched (dev).",
+    "editPlaceholder": "Edit “{name}” (dev).",
+    "deletePlaceholder": "Delete “{name}” (dev).",
+    "entitiesFetchError": "Failed to load entities. Please try again.",
+    "entityCreated": "Entity created successfully",
+    "entityCreateError": "Failed to create entity",
+
+    "wizard": {
+      "title": "Create New Entity",
+      "step1": "Basics",
+      "step2": "Details",
+      "step3": "Admin",
+      "step4": "Permissions",
+      "stepIncomplete": "Please complete the required fields",
+      "finished": "Wizard completed (no API call yet)",
+      "uploadOk": "Image uploaded."
+    },
+
+    "details": {
+      "address": "Address",
+      "zip": "Zip / Postal code",
+      "city": "City",
+      "country": "Country",
+      "phone": "Contact phone",
+      "imageUrl": "Logo / Image URL",
+      "siteUrl": "Official site URL",
+      "contactEmail": "Contact e-mail",
+      "billingEmail": "Billing e-mail",
+      "copyContact": "Use contact e-mail for billing",
+      "chairman": "Chairman / President",
+      "chairmanImg": "Chairman photo URL"
+    },
+
+    "admin": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "E-mail",
+      "password": "Password",
+      "confirm": "Confirm password"
+    },
+
+    "permissions": {
+      "placeholder": "Role / permission assignment UI comes next 🙂"
+    },
+
+    "previous": "Previous",
+    "next": "Next",
+    "finish": "Finish",
+    "save": "Save",
+    "cancel": "Cancel",
+
+    "usersFetchError": "Could not load users. Please try again.",
+    "noUsers": "No users found.",
+    "name": "Name",
+    "email": "Email",
+    "avatar": "Image",
+    "entity": "Entity",
+    "createUser": "Create User",
+    "createPlaceholder": "Start creating a new user",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "pageInfo": "Page {{page}} of {{total}}",
+    "prev": "Previous",
+    "userDetails": "User Details",
+    "phone": "Phone",
+    "language": "Language",
+    "status": "Status",
+    "mfaEnabled": "MFA Enabled",
+    "close": "Close",
+    "birthDate": "Birth Date",
+    "gender": "Gender",
+    "identityNumber": "Identity Number",
+    "bloodType": "Blood Type",
+    "addressLine1": "Address Line 1",
+    "addressLine2": "Address Line 2",
+    "city": "City",
+    "stateProvince": "State / Province",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "emergencyContactName": "Emergency Contact Name",
+    "emergencyContactPhone": "Emergency Contact Phone",
+    "emergencyContactRelationship": "Emergency Contact Relationship",
+    "allergies": "Allergies",
+    "medicalConditions": "Medical Conditions"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français",
+    "zh": "中文"
+  },
+  "alt": {
+    "logo": "Logo",
+    "ball": "Ball",
+    "redCard": "Red Card",
+    "whistle": "Whistle",
+    "player": "Player"
+  },
+  "footer": {
+    "developedWithLove": "Developed and designed with ❤️ by"
+  },
+  "sessionRefreshed": "Session extended successfully."
+}

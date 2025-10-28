@@ -1,0 +1,50 @@
+// app/layout.tsx
+import type { Metadata } from 'next';
+import './globals.css';
+import { TranslationProvider } from '@/components/TranslationProvider';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthProvider } from '@/context/authContext';
+import { LoadingProvider } from '@/context/LoadingContext';
+import LoadingIndicator from '@/components/LoadingIndicator';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s - SPARC',
+    default: 'SPARC',
+  },
+  description:
+    'Sports Platform for Administration, Resourcing & Coordination || Created with Love by MYB4Y',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className="font-poppins antialiased">
+        <TranslationProvider>
+          <LoadingProvider>
+            <AuthProvider>
+              {children}
+              <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </AuthProvider>
+            <LoadingIndicator />
+          </LoadingProvider>
+        </TranslationProvider>
+      </body>
+    </html>
+  );
+}
