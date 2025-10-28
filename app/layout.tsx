@@ -10,11 +10,11 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - SPARC',
-    default: 'SPARC',
+    template: '%s - CAMP',
+    default: 'CAMP',
   },
   description:
-    'Sports Platform for Administration, Resourcing & Coordination || Created with Love by MYB4Y',
+    'The platform that brings owners and tenants together for simpler communication and smoother renting',
 };
 
 export default function RootLayout({

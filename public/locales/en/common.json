@@ -64,129 +64,112 @@
     "inactivityHeader": "Are you still there?",
     "redirectMessage": "You’ve been inactive and will be logged out soon.",
     "stay": "Stay Logged In",
-    "expiredToast": "Your session has expired. Please log in again."
+    "expiredToast": "Your session has expired. Please log in again.",
+    "inactivityToast": "You were logged out due to inactivity."
   },
   "auth": {
     "requiredToast": "You must be logged in to access the dashboard.",
     "loggedOutToast": "You have been logged out."
   },
-  "dashboard": {
-    "title": "Dashboard",
-    "openMenu": "Open menu",
-    "closeMenu": "Close menu",
-    "avatarAlt": "User avatar",
-    "refresh": "Refresh",
-    "logout": "Log Out",
-
-    "menu": {
-      "administration": "Administration",
-      "users": "Users",
-      "entities": "Entities",
-      "roles": "Roles",
-      "modules-definition": "Modules Definition",
-      "components-definition": "Components Definition"
-    },
-
-    "tooltip": {
-      "edit": "Edit entity",
-      "delete": "Delete entity"
-    },
-
-    "newEntity": "Create new entity",
-    "createEntity": "Create New Entity",
-    "entityName": "Entity name",
-    "entityNamePlaceholder": "e.g., Liga Portuguesa de Futebol",
-    "createdBy": "Created By",
-    "createdAt": "Created At",
-    "actions": "Actions",
-    "loading": "Loading…",
-    "noEntities": "No entities found.",
-    "createEntityPlaceholder": "Create-entity flow launched (dev).",
-    "editPlaceholder": "Edit “{name}” (dev).",
-    "deletePlaceholder": "Delete “{name}” (dev).",
-    "entitiesFetchError": "Failed to load entities. Please try again.",
-    "entityCreated": "Entity created successfully",
-    "entityCreateError": "Failed to create entity",
-
-    "wizard": {
-      "title": "Create New Entity",
-      "step1": "Basics",
-      "step2": "Details",
-      "step3": "Admin",
-      "step4": "Permissions",
-      "stepIncomplete": "Please complete the required fields",
-      "finished": "Wizard completed (no API call yet)",
-      "uploadOk": "Image uploaded."
-    },
-
-    "details": {
-      "address": "Address",
-      "zip": "Zip / Postal code",
-      "city": "City",
-      "country": "Country",
-      "phone": "Contact phone",
-      "imageUrl": "Logo / Image URL",
-      "siteUrl": "Official site URL",
-      "contactEmail": "Contact e-mail",
-      "billingEmail": "Billing e-mail",
-      "copyContact": "Use contact e-mail for billing",
-      "chairman": "Chairman / President",
-      "chairmanImg": "Chairman photo URL"
-    },
-
-    "admin": {
-      "firstName": "First name",
-      "lastName": "Last name",
-      "email": "E-mail",
-      "password": "Password",
-      "confirm": "Confirm password"
-    },
-
-    "permissions": {
-      "placeholder": "Role / permission assignment UI comes next 🙂"
-    },
-
-    "previous": "Previous",
-    "next": "Next",
-    "finish": "Finish",
-    "save": "Save",
-    "cancel": "Cancel",
-
-    "usersFetchError": "Could not load users. Please try again.",
-    "noUsers": "No users found.",
-    "name": "Name",
-    "email": "Email",
-    "avatar": "Image",
-    "entity": "Entity",
-    "createUser": "Create User",
-    "createPlaceholder": "Start creating a new user",
-    "view": "View",
-    "edit": "Edit",
-    "delete": "Delete",
-    "pageInfo": "Page {{page}} of {{total}}",
-    "prev": "Previous",
-    "userDetails": "User Details",
-    "phone": "Phone",
-    "language": "Language",
-    "status": "Status",
-    "mfaEnabled": "MFA Enabled",
-    "close": "Close",
-    "birthDate": "Birth Date",
-    "gender": "Gender",
-    "identityNumber": "Identity Number",
-    "bloodType": "Blood Type",
-    "addressLine1": "Address Line 1",
-    "addressLine2": "Address Line 2",
-    "city": "City",
-    "stateProvince": "State / Province",
-    "postalCode": "Postal Code",
-    "country": "Country",
-    "emergencyContactName": "Emergency Contact Name",
-    "emergencyContactPhone": "Emergency Contact Phone",
-    "emergencyContactRelationship": "Emergency Contact Relationship",
-    "allergies": "Allergies",
-    "medicalConditions": "Medical Conditions"
+  "menu": {
+    "administration": "Administration",
+    "users": "Users",
+    "entities": "Entities",
+    "roles": "Roles",
+    "modules-definition": "Modules Definition",
+    "components-definition": "Components Definition"
   },
+  "tooltip": {
+    "edit": "Edit entity",
+    "delete": "Delete entity"
+  },
+  "newEntity": "Create new entity",
+  "createEntity": "Create New Entity",
+  "entityName": "Entity name",
+  "entityNamePlaceholder": "e.g., Liga Portuguesa de Futebol",
+  "createdBy": "Created By",
+  "createdAt": "Created At",
+  "actions": "Actions",
+  "loading": "Loading…",
+  "noEntities": "No entities found.",
+  "createEntityPlaceholder": "Create-entity flow launched (dev).",
+  "editPlaceholder": "Edit “{name}” (dev).",
+  "deletePlaceholder": "Delete “{name}” (dev).",
+  "entitiesFetchError": "Failed to load entities. Please try again.",
+  "entityCreated": "Entity created successfully",
+  "entityCreateError": "Failed to create entity",
+  "wizard": {
+    "title": "Create New Entity",
+    "step1": "Basics",
+    "step2": "Details",
+    "step3": "Admin",
+    "step4": "Permissions",
+    "stepIncomplete": "Please complete the required fields",
+    "finished": "Wizard completed (no API call yet)",
+    "uploadOk": "Image uploaded."
+  },
+  "details": {
+    "address": "Address",
+    "zip": "Zip / Postal code",
+    "city": "City",
+    "country": "Country",
+    "phone": "Contact phone",
+    "imageUrl": "Logo / Image URL",
+    "siteUrl": "Official site URL",
+    "contactEmail": "Contact e-mail",
+    "billingEmail": "Billing e-mail",
+    "copyContact": "Use contact e-mail for billing",
+    "chairman": "Chairman / President",
+    "chairmanImg": "Chairman photo URL"
+  },
+  "admin": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "E-mail",
+    "password": "Password",
+    "confirm": "Confirm password"
+  },
+  "permissions": {
+    "placeholder": "Role / permission assignment UI comes next 🙂"
+  },
+  "previous": "Previous",
+  "next": "Next",
+  "finish": "Finish",
+  "save": "Save",
+  "cancel": "Cancel",
+  "usersFetchError": "Could not load users. Please try again.",
+  "noUsers": "No users found.",
+  "name": "Name",
+  "email": "Email",
+  "avatar": "Image",
+  "entity": "Entity",
+  "createUser": "Create User",
+  "createPlaceholder": "Start creating a new user",
+  "view": "View",
+  "edit": "Edit",
+  "delete": "Delete",
+  "pageInfo": "Page {{page}} of {{total}}",
+  "prev": "Previous",
+  "userDetails": "User Details",
+  "phone": "Phone",
+  "language": "Language",
+  "status": "Status",
+  "mfaEnabled": "MFA Enabled",
+  "close": "Close",
+  "birthDate": "Birth Date",
+  "gender": "Gender",
+  "identityNumber": "Identity Number",
+  "bloodType": "Blood Type",
+  "addressLine1": "Address Line 1",
+  "addressLine2": "Address Line 2",
+  "stateProvince": "State / Province",
+  "postalCode": "Postal Code",
+  "country": "Country",
+  "emergencyContactName": "Emergency Contact Name",
+  "emergencyContactPhone": "Emergency Contact Phone",
+  "emergencyContactRelationship": "Emergency Contact Relationship",
+  "allergies": "Allergies",
+  "medicalConditions": "Medical Conditions",
   "languages": {
     "en": "English",
     "es": "Español",
@@ -204,5 +187,133 @@
   "footer": {
     "developedWithLove": "Developed and designed with ❤️ by"
   },
-  "sessionRefreshed": "Session extended successfully."
+  "sessionRefreshed": "Session extended successfully.",
+  "dashboard": {
+    "title": "Dashboard",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "avatarAlt": "User avatar",
+    "refresh": "Refresh",
+    "logout": "Log Out",
+    "menu": {
+      "users": "Users",
+    "overview": "Overview",
+    "user-details": "User details",
+    "change-password": "Change password"
+    }
+  },
+  "users": {
+    "details": {
+      "title": "Your profile",
+      "loadError": "Could not load your details.",
+      "saved": "Profile updated.",
+      "saveError": "Could not save changes.",
+      "noChanges": "No changes to save.",
+      "uploadAvatar": "Upload new avatar",
+      "uploading": "Uploading…",
+      "removeAvatar": "Remove",
+      "avatarUploaded": "Avatar uploaded.",
+      "avatarUploadError": "Could not upload avatar.",
+      "languageHint": "Changing language will prompt a reload after saving.",
+      "reloadForLanguage": "Language changed. Reload now to apply?"
+    },
+    "fields": {
+      "name": "Name",
+      "surname": "Surname",
+      "languagePreference": "Language",
+      "profilePictureUrl": "Profile picture URL",
+      "phoneNumber": "Phone number",
+      "addressLine1": "Address line 1",
+      "addressLine2": "Address line 2",
+      "city": "City",
+      "stateProvince": "State/Province",
+      "postalCode": "Postal code",
+      "country": "Country",
+      "emergencyContactName": "Emergency contact name",
+      "emergencyContactPhone": "Emergency contact phone",
+      "emergencyContactRelationship": "Emergency contact relationship",
+      "allergies": "Allergies",
+      "medicalConditions": "Medical conditions"
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "submit": "Update password",
+      "mismatch": "New password and confirmation do not match.",
+      "changed": "Password changed successfully.",
+      "invalidCurrent": "Your current password is incorrect.",
+      "error": "Could not change password.",
+      "instructions": "Use at least 8 characters with letters and numbers, at least 1 uppercase letter, and at least 1 symbol (e.g., @). Minimum strength score required: 7/10.",
+      "strength": "Strength: {{score}} / 10",
+      "tooWeak": "Password is too weak. Please make it stronger (≥ 7/10)."
+    }
+  },
+  "common": {
+    "save": "Save",
+    "saving": "Saving…",
+    "reset": "Reset"
+  },
+  "dummy": {
+    "authRequired": "You must be logged in to access the dashboard.",
+    "header": {
+      "title": "Overview",
+      "subtitle": "This is a sample dashboard with mock data."
+    },
+    "actions": {
+      "export": "Export",
+      "viewDetails": "View details"
+    },
+    "stats": {
+      "costs": {
+        "title": "Costs",
+        "sublabel": "vs last month",
+        "delta": "−4.3%"
+      },
+      "revenue": {
+        "title": "Revenue",
+        "sublabel": "vs last month",
+        "delta": "+8.9%"
+      },
+      "issues": {
+        "title": "Open issues",
+        "value": "12",
+        "sublabel": "triaged",
+        "delta": "−2 since yesterday"
+      },
+      "aiInvoices": {
+        "title": "AI-processed invoices",
+        "sublabel": "last 30 days",
+        "delta": "+11%"
+      },
+      "tickets": {
+        "title": "Tickets resolved",
+        "sublabel": "this week",
+        "delta": "+6%"
+      },
+      "housesAI": {
+        "title": "Houses tagged by AI",
+        "sublabel": "this month",
+        "delta": "+14%"
+      }
+    },
+    "chart": {
+      "title": "Monthly revenue",
+      "subtitle": "Last 12 months",
+      "legend": "Revenue"
+    },
+    "whatsNew": {
+      "title": "What’s new",
+      "item1": { "title": "Audit log", "body": "We’ve added more detail to each change." },
+      "item2": { "title": "Faster reports", "body": "Background processing improved by 30%." },
+      "item3": { "title": "New integrations", "body": "Connect with more third-party tools." }
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "openIssues": "Open issues",
+      "monthlyReport": "Monthly report",
+      "helper": "Shortcuts to commonly used actions."
+    }
+  }
 }

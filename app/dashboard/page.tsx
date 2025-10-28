@@ -1,36 +1,21 @@
 // app/dashboard/page.tsx
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/authContext';
 import { Button } from '@/components/ui/button';
 import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
+  Accordion, AccordionItem, AccordionTrigger, AccordionContent,
 } from '@/components/ui/accordion';
-
 import {
-  AreaChart,
-  Area,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
+import ChangePasswordModal from '@/app/dashboard/components/ChagePasswordModal';
 
-type StatCardProps = {
-  title: string;
-  value: string;
-  sublabel?: string;
-  delta?: { text: string; positive?: boolean };
-};
-
+type StatCardProps = { title: string; value: string; sublabel?: string; delta?: { text: string; positive?: boolean } };
 function StatCard({ title, value, sublabel, delta }: StatCardProps) {
   return (
     <div className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 p-5 flex flex-col gap-2">
@@ -53,28 +38,18 @@ function StatCard({ title, value, sublabel, delta }: StatCardProps) {
   );
 }
 
-function monthLabel(d: Date) {
-  return d.toLocaleString(undefined, { month: 'short' });
-}
-
-/** Mock last 12 months of revenue (newest last) */
+function monthLabel(d: Date) { return d.toLocaleString(undefined, { month: 'short' }); }
+/** Mock last 12 months of revenue */
 function useLast12MonthsRevenue() {
   return useMemo(() => {
     const now = new Date();
     const series: { name: string; revenue: number }[] = [];
-
-    // generate 12 months, oldest -> newest
     for (let i = 11; i >= 0; i--) {
       const dt = new Date(now.getFullYear(), now.getMonth() - i, 1);
-
-      // Simple synthetic revenue curve:
-      // base + seasonal wiggle + gentle uptrend
       const base = 26000;
-      const uptrend = (11 - i) * 900; // +€900 each month
+      const uptrend = (11 - i) * 900;
       const seasonal = Math.round(2000 * Math.sin(((11 - i) / 12) * Math.PI * 2));
-      const rev = base + uptrend + seasonal;
-
-      series.push({ name: monthLabel(dt), revenue: rev });
+      series.push({ name: monthLabel(dt), revenue: base + uptrend + seasonal });
     }
     return series;
   }, []);
@@ -84,8 +59,21 @@ export default function DashboardPage() {
   const router = useRouter();
   const { loading, loaded, user } = useAuth();
   const { t } = useTranslation('common');
+  const revenueData = useLast12MonthsRevenue();
 
-  // Auth guard (page-level)
+  // 👇 local state controls the modal (no query-string auto-open)
+  const [showChangePassword, setShowChangePassword] = useState(false);
+
+   const [showPwd, setShowPwd] = useState(false);
+
+  // event-based open from the menu
+  useEffect(() => {
+    const handler = () => setShowPwd(true);
+    window.addEventListener('open-change-password', handler);
+    return () => window.removeEventListener('open-change-password', handler);
+  }, []);
+
+  // Auth guard
   useEffect(() => {
     if (!loading && loaded && !user) {
       toast.error(t('dummy.authRequired'));
@@ -93,53 +81,14 @@ export default function DashboardPage() {
     }
   }, [loading, loaded, user, router, t]);
 
+  // Listen for the custom event fired by the SlidingMenu
+  useEffect(() => {
+    const handler = () => setShowChangePassword(true);
+    window.addEventListener('open-change-password', handler as EventListener);
+    return () => window.removeEventListener('open-change-password', handler as EventListener);
+  }, []);
+
   if (loading || !loaded || !user) return null;
-
-  // Hard-coded stats (row 1)
-  const statsRow1 = {
-    costs: {
-      title: t('dummy.stats.costs.title'),
-      value: '€ 12,480',
-      sublabel: t('dummy.stats.costs.sublabel'),
-      delta: { text: t('dummy.stats.costs.delta'), positive: false },
-    },
-    revenue: {
-      title: t('dummy.stats.revenue.title'),
-      value: '€ 38,900',
-      sublabel: t('dummy.stats.revenue.sublabel'),
-      delta: { text: t('dummy.stats.revenue.delta'), positive: true },
-    },
-    issues: {
-      title: t('dummy.stats.issues.title'),
-      value: t('dummy.stats.issues.value'),
-      sublabel: t('dummy.stats.issues.sublabel'),
-      delta: { text: t('dummy.stats.issues.delta'), positive: true },
-    },
-  };
-
-  // Additional 3 cards (row 2)
-  const statsRow2 = {
-    aiInvoices: {
-      title: t('dummy.stats.aiInvoices.title'),
-      value: '124',
-      sublabel: t('dummy.stats.aiInvoices.sublabel'),
-      delta: { text: t('dummy.stats.aiInvoices.delta'), positive: true },
-    },
-    tickets: {
-      title: t('dummy.stats.tickets.title'),
-      value: '86',
-      sublabel: t('dummy.stats.tickets.sublabel'),
-      delta: { text: t('dummy.stats.tickets.delta'), positive: true },
-    },
-    housesAI: {
-      title: t('dummy.stats.housesAI.title'),
-      value: '42',
-      sublabel: t('dummy.stats.housesAI.sublabel'),
-      delta: { text: t('dummy.stats.housesAI.delta'), positive: true },
-    },
-  };
-
-  const revenueData = useLast12MonthsRevenue();
 
   return (
     <div className="space-y-8">
@@ -156,49 +105,19 @@ export default function DashboardPage() {
 
       {/* Stat Cards — Row 1 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <StatCard
-          title={statsRow1.costs.title}
-          value={statsRow1.costs.value}
-          sublabel={statsRow1.costs.sublabel}
-          delta={statsRow1.costs.delta}
-        />
-        <StatCard
-          title={statsRow1.revenue.title}
-          value={statsRow1.revenue.value}
-          sublabel={statsRow1.revenue.sublabel}
-          delta={statsRow1.revenue.delta}
-        />
-        <StatCard
-          title={statsRow1.issues.title}
-          value={statsRow1.issues.value}
-          sublabel={statsRow1.issues.sublabel}
-          delta={statsRow1.issues.delta}
-        />
+        <StatCard title={t('dummy.stats.costs.title')} value="€ 12,480" sublabel={t('dummy.stats.costs.sublabel')} delta={{ text: t('dummy.stats.costs.delta'), positive: false }}/>
+        <StatCard title={t('dummy.stats.revenue.title')} value="€ 38,900" sublabel={t('dummy.stats.revenue.sublabel')} delta={{ text: t('dummy.stats.revenue.delta'), positive: true }}/>
+        <StatCard title={t('dummy.stats.issues.title')} value={t('dummy.stats.issues.value')} sublabel={t('dummy.stats.issues.sublabel')} delta={{ text: t('dummy.stats.issues.delta'), positive: true }}/>
       </div>
 
-      {/* Stat Cards — Row 2 (new) */}
+      {/* Stat Cards — Row 2 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <StatCard
-          title={statsRow2.aiInvoices.title}
-          value={statsRow2.aiInvoices.value}
-          sublabel={statsRow2.aiInvoices.sublabel}
-          delta={statsRow2.aiInvoices.delta}
-        />
-        <StatCard
-          title={statsRow2.tickets.title}
-          value={statsRow2.tickets.value}
-          sublabel={statsRow2.tickets.sublabel}
-          delta={statsRow2.tickets.delta}
-        />
-        <StatCard
-          title={statsRow2.housesAI.title}
-          value={statsRow2.housesAI.value}
-          sublabel={statsRow2.housesAI.sublabel}
-          delta={statsRow2.housesAI.delta}
-        />
+        <StatCard title={t('dummy.stats.aiInvoices.title')} value="124" sublabel={t('dummy.stats.aiInvoices.sublabel')} delta={{ text: t('dummy.stats.aiInvoices.delta'), positive: true }}/>
+        <StatCard title={t('dummy.stats.tickets.title')} value="86" sublabel={t('dummy.stats.tickets.sublabel')} delta={{ text: t('dummy.stats.tickets.delta'), positive: true }}/>
+        <StatCard title={t('dummy.stats.housesAI.title')} value="42" sublabel={t('dummy.stats.housesAI.sublabel')} delta={{ text: t('dummy.stats.housesAI.delta'), positive: true }}/>
       </div>
 
-      {/* Revenue Chart — last 12 months */}
+      {/* Revenue Chart */}
       <div className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 p-5">
         <div className="mb-4 flex items-center justify-between">
           <div>
@@ -207,7 +126,6 @@ export default function DashboardPage() {
           </div>
           <Button variant="secondary">{t('dummy.actions.viewDetails')}</Button>
         </div>
-
         <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={revenueData} margin={{ left: 12, right: 12, top: 10, bottom: 0 }}>
@@ -219,53 +137,39 @@ export default function DashboardPage() {
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="name" tickLine={false} axisLine={false} />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(v) => `€${(v / 1000).toFixed(0)}k`}
-              />
-              <Tooltip
-                contentStyle={{ borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)' }}
-                formatter={(value) => [`€ ${Number(value).toLocaleString()}`, t('dummy.chart.legend')]}
-              />
+              <YAxis tickLine={false} axisLine={false} tickFormatter={(v) => `€${(v / 1000).toFixed(0)}k`} />
+              <Tooltip contentStyle={{ borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)' }} formatter={(value) => [`€ ${Number(value).toLocaleString()}`, t('dummy.chart.legend')]}/>
               <Area type="monotone" dataKey="revenue" stroke="#111827" fillOpacity={1} fill="url(#revFill)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* What’s New + Quick Actions */}
+      {/* What's New + Quick Actions */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 p-5">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dummy.whatsNew.title')}</h3>
           <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>{t('dummy.whatsNew.item1.title')}</AccordionTrigger>
-              <AccordionContent>{t('dummy.whatsNew.item1.body')}</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger>{t('dummy.whatsNew.item2.title')}</AccordionTrigger>
-              <AccordionContent>{t('dummy.whatsNew.item2.body')}</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger>{t('dummy.whatsNew.item3.title')}</AccordionTrigger>
-              <AccordionContent>{t('dummy.whatsNew.item3.body')}</AccordionContent>
-            </AccordionItem>
+            <AccordionItem value="item-1"><AccordionTrigger>{t('dummy.whatsNew.item1.title')}</AccordionTrigger><AccordionContent>{t('dummy.whatsNew.item1.body')}</AccordionContent></AccordionItem>
+            <AccordionItem value="item-2"><AccordionTrigger>{t('dummy.whatsNew.item2.title')}</AccordionTrigger><AccordionContent>{t('dummy.whatsNew.item2.body')}</AccordionContent></AccordionItem>
+            <AccordionItem value="item-3"><AccordionTrigger>{t('dummy.whatsNew.item3.title')}</AccordionTrigger><AccordionContent>{t('dummy.whatsNew.item3.body')}</AccordionContent></AccordionItem>
           </Accordion>
         </div>
-
         <div className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 p-5">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dummy.quickActions.title')}</h3>
           <div className="flex flex-wrap gap-2">
-            {/* removed: Invite user, Create invoice */}
             <Button size="sm" variant="secondary">{t('dummy.quickActions.openIssues')}</Button>
             <Button size="sm" variant="secondary">{t('dummy.quickActions.monthlyReport')}</Button>
           </div>
-          <div className="mt-4 text-sm text-gray-500">
-            {t('dummy.quickActions.helper')}
-          </div>
+          <div className="mt-4 text-sm text-gray-500">{t('dummy.quickActions.helper')}</div>
         </div>
       </div>
+
+      {/* Modal mount (controlled by local state, not query string) */}
+      <ChangePasswordModal
+        isOpen={showPwd}
+        onClose={() => setShowPwd(false)} // ✅ user can close anytime
+      />
     </div>
   );
 }

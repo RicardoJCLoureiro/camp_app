@@ -10,10 +10,10 @@
     "success": "¡Inicio de sesión exitoso!",
     "failure": "Error al iniciar sesión. Por favor, inténtalo de nuevo.",
     "emailNotFound": "Esa dirección de correo electrónico no está registrada.",
-    "wrongPassword": "La contraseña que has introducido es incorrecta.",
+    "wrongPassword": "La contraseña que introdujiste es incorrecta.",
     "unexpectedError": "Ocurrió un error inesperado. Por favor, inténtalo más tarde.",
     "missingEmail": "Por favor, introduce tu correo electrónico.",
-    "forgotPassword": "¿Has olvidado tu contraseña?",
+    "forgotPassword": "¿Olvidaste la contraseña?",
     "enterMfaCode": "Introduce el código de autenticación de tu aplicación",
     "mfaCodeLabel": "Código de autenticador",
     "mfaCodePlaceholder": "123456",
@@ -31,8 +31,8 @@
     "submit": "Enviar enlace de restablecimiento",
     "backToLogin": "Volver al inicio de sesión",
     "resetLinkSent": "Si existe una cuenta con ese correo electrónico, se ha enviado un enlace de restablecimiento.",
-    "tooManyRequests": "Demasiadas solicitudes. Por favor, inténtalo más tarde.",
-    "unexpectedError": "Ocurrió un error. Por favor, inténtalo más tarde."
+    "tooManyRequests": "Demasiadas solicitudes. Por favor, inténtalo de nuevo más tarde.",
+    "unexpectedError": "Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
   },
   "forgotPasswordReq": {
     "header": "Restablecer tu contraseña",
@@ -42,17 +42,17 @@
     "confirmPasswordPlaceholder": "Vuelve a introducir tu nueva contraseña",
     "mfaCodeLabel": "Código de autenticador",
     "mfaCodePlaceholder": "123456",
-    "complexityLabel": "Fortaleza de la contraseña",
+    "complexityLabel": "Fuerza de la contraseña",
     "loadingButton": "Restableciendo…",
     "resetButton": "Restablecer contraseña",
-    "missingFields": "Por favor, rellena todos los campos.",
+    "missingFields": "Por favor, completa todos los campos.",
     "passwordMismatch": "Las contraseñas no coinciden.",
-    "weakPassword": "Tu contraseña es demasiado débil (se requiere mín. 7/10).",
+    "weakPassword": "Tu contraseña es demasiado débil (se requiere un mínimo de 7/10).",
     "invalidOrExpiredToken": "Este enlace de restablecimiento no es válido o ha caducado. Por favor, solicita uno nuevo.",
-    "mfaNotSetup": "La MFA no está configurada para tu cuenta.",
+    "mfaNotSetup": "MFA no está configurado para tu cuenta.",
     "invalidMfaCode": "Código de autenticación inválido.",
     "unexpectedError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.",
-    "success": "¡Tu contraseña se ha restablecido correctamente!",
+    "success": "¡Tu contraseña ha sido restablecida correctamente!",
     "resetFailed": "Error al restablecer la contraseña. Por favor, inténtalo de nuevo."
   },
   "sessionWarningModal": {
@@ -64,136 +64,255 @@
     "inactivityHeader": "¿Sigues ahí?",
     "redirectMessage": "Has estado inactivo y se cerrará tu sesión pronto.",
     "stay": "Mantener sesión iniciada",
-    "expiredToast": "Tu sesión ha caducado. Por favor, inicia sesión de nuevo."
+    "expiredToast": "Tu sesión ha caducado. Por favor, inicia sesión de nuevo.",
+    "inactivityToast": "Se cerró tu sesión debido a la inactividad."
   },
   "auth": {
-    "requiredToast": "Debes iniciar sesión para acceder al panel de control.",
-    "loggedOutToast": "Has cerrado la sesión."
+    "requiredToast": "Debes iniciar sesión para acceder al panel.",
+    "loggedOutToast": "Has cerrado sesión."
   },
-  "dashboard": {
-    "title": "Panel de control",
-    "openMenu": "Abrir menú",
-    "closeMenu": "Cerrar menú",
-    "avatarAlt": "Avatar de usuario",
-    "refresh": "Actualizar",
-    "logout": "Cerrar sesión",
-    "menu": {
-      "administration": "Administración",
-      "users": "Usuarios",
-      "entities": "Entidades",
-      "roles": "Roles",
-      "modules-definition": "Definición de Módulos",
-      "components-definition": "Definición de Componentes"
-    },
-    "tooltip": {
-      "edit": "Editar entidad",
-      "delete": "Eliminar entidad"
-    },
-    "newEntity": "Crear nueva entidad",
-    "createEntity": "Crear Nueva Entidad",
-    "entityName": "Nombre de la entidad",
-    "entityNamePlaceholder": "p. ej., Liga Portuguesa de Futebol",
-    "createdBy": "Creado por",
-    "createdAt": "Creado el",
-    "actions": "Acciones",
-    "loading": "Cargando…",
-    "noEntities": "No se encontraron entidades.",
-    "createEntityPlaceholder": "Flujo de creación de entidad iniciado (dev).",
-    "editPlaceholder": "Editar “{name}” (dev).",
-    "deletePlaceholder": "Eliminar “{name}” (dev).",
-    "entitiesFetchError": "Error al cargar las entidades. Por favor, inténtalo de nuevo.",
-    "entityCreated": "Entidad creada correctamente",
-    "entityCreateError": "Error al crear la entidad",
-    "wizard": {
-      "title": "Crear Nueva Entidad",
-      "step1": "Básicos",
-      "step2": "Detalles",
-      "step3": "Admin",
-      "step4": "Permisos",
-      "stepIncomplete": "Por favor, completa los campos requeridos",
-      "finished": "Asistente completado (aún sin llamada a la API)",
-      "uploadOk": "Imagen subida."
-    },
-    "details": {
-      "address": "Dirección",
-      "zip": "Código postal",
-      "city": "Ciudad",
-      "country": "País",
-      "phone": "Teléfono de contacto",
-      "imageUrl": "URL del logo / imagen",
-      "siteUrl": "URL del sitio oficial",
-      "contactEmail": "Correo electrónico de contacto",
-      "billingEmail": "Correo electrónico de facturación",
-      "copyContact": "Usar correo de contacto para facturación",
-      "chairman": "Presidente / Director",
-      "chairmanImg": "URL de la foto del presidente"
-    },
-    "admin": {
-      "firstName": "Nombre",
-      "lastName": "Apellidos",
-      "email": "Correo electrónico",
-      "password": "Contraseña",
-      "confirm": "Confirmar contraseña"
-    },
-    "permissions": {
-      "placeholder": "La interfaz de asignación de roles / permisos viene a continuación 🙂"
-    },
-    "previous": "Anterior",
-    "next": "Siguiente",
-    "finish": "Finalizar",
-    "save": "Guardar",
-    "cancel": "Cancelar",
-    "usersFetchError": "No se pudieron cargar los usuarios. Por favor, inténtalo de nuevo.",
-    "noUsers": "No se encontraron usuarios.",
-    "name": "Nombre",
-    "email": "Correo electrónico",
-    "avatar": "Image",
-    "entity": "Entidad",
-    "createUser": "Crear Usuario",
-    "createPlaceholder": "Empezar a crear un nuevo usuario",
-    "view": "Ver",
-    "edit": "Editar",
-    "delete": "Eliminar",
-    "pageInfo": "Página {{page}} de {{total}}",
-    "prev": "Anterior",
-    "userDetails": "Detalles del Usuario",
-    "phone": "Teléfono",
-    "language": "Idioma",
-    "status": "Estado",
-    "mfaEnabled": "MFA Habilitada",
-    "close": "Cerrar",
-    "birthDate": "Fecha de nacimiento",
-    "gender": "Género",
-    "identityNumber": "Número de identidad",
-    "bloodType": "Grupo sanguíneo",
-    "addressLine1": "Dirección Línea 1",
-    "addressLine2": "Dirección Línea 2",
+  "menu": {
+    "administration": "Administración",
+    "users": "Usuarios",
+    "entities": "Entidades",
+    "roles": "Roles",
+    "modules-definition": "Definición de Módulos",
+    "components-definition": "Definición de Componentes"
+  },
+  "tooltip": {
+    "edit": "Editar entidad",
+    "delete": "Eliminar entidad"
+  },
+  "newEntity": "Crear nueva entidad",
+  "createEntity": "Crear nueva entidad",
+  "entityName": "Nombre de la entidad",
+  "entityNamePlaceholder": "ej., Liga Portuguesa de Fútbol",
+  "createdBy": "Creado por",
+  "createdAt": "Fecha de creación",
+  "actions": "Acciones",
+  "loading": "Cargando…",
+  "noEntities": "No se encontraron entidades.",
+  "createEntityPlaceholder": "Flujo de creación de entidad iniciado (desarrollo).",
+  "editPlaceholder": "Editar “{name}” (desarrollo).",
+  "deletePlaceholder": "Eliminar “{name}” (desarrollo).",
+  "entitiesFetchError": "Error al cargar entidades. Por favor, inténtalo de nuevo.",
+  "entityCreated": "Entidad creada correctamente",
+  "entityCreateError": "Error al crear entidad",
+  "wizard": {
+    "title": "Crear nueva entidad",
+    "step1": "Básicos",
+    "step2": "Detalles",
+    "step3": "Administrador",
+    "step4": "Permisos",
+    "stepIncomplete": "Por favor, completa los campos requeridos",
+    "finished": "Asistente completado (aún sin llamada a la API)",
+    "uploadOk": "Imagen subida."
+  },
+  "details": {
+    "address": "Dirección",
+    "zip": "Código postal",
     "city": "Ciudad",
-    "stateProvince": "Estado / Provincia",
-    "postalCode": "Código Postal",
     "country": "País",
-    "emergencyContactName": "Nombre del contacto de emergencia",
-    "emergencyContactPhone": "Teléfono del contacto de emergencia",
-    "emergencyContactRelationship": "Relación del contacto de emergencia",
+    "phone": "Teléfono de contacto",
+    "imageUrl": "URL de logo / imagen",
+    "siteUrl": "URL del sitio oficial",
+    "contactEmail": "Correo electrónico de contacto",
+    "billingEmail": "Correo electrónico de facturación",
+    "copyContact": "Usar correo electrónico de contacto para facturación",
+    "chairman": "Presidente",
+    "chairmanImg": "URL de foto del presidente"
+  },
+  "admin": {
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirm": "Confirmar contraseña"
+  },
+  "permissions": {
+    "placeholder": "La interfaz de asignación de roles/permisos viene a continuación 🙂"
+  },
+  "previous": "Anterior",
+  "next": "Siguiente",
+  "finish": "Finalizar",
+  "save": "Guardar",
+  "cancel": "Cancelar",
+  "usersFetchError": "No se pudieron cargar los usuarios. Por favor, inténtalo de nuevo.",
+  "noUsers": "No se encontraron usuarios.",
+  "name": "Nombre",
+  "email": "Correo electrónico",
+  "avatar": "Imagen",
+  "entity": "Entidad",
+  "createUser": "Crear usuario",
+  "createPlaceholder": "Empezar a crear un nuevo usuario",
+  "view": "Ver",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "pageInfo": "Página {{page}} de {{total}}",
+  "prev": "Anterior",
+  "userDetails": "Detalles del usuario",
+  "phone": "Teléfono",
+  "language": "Idioma",
+  "status": "Estado",
+  "mfaEnabled": "MFA habilitado",
+  "close": "Cerrar",
+  "birthDate": "Fecha de nacimiento",
+  "gender": "Género",
+  "identityNumber": "Número de identidad",
+  "bloodType": "Grupo sanguíneo",
+  "addressLine1": "Dirección Línea 1",
+  "addressLine2": "Dirección Línea 2",
+  "stateProvince": "Estado / Provincia",
+  "postalCode": "Código postal",
+  "country": "País",
+  "emergencyContactName": "Nombre de contacto de emergencia",
+  "emergencyContactPhone": "Teléfono de contacto de emergencia",
+    "emergencyContactRelationship": "Relación de contacto de emergencia",
     "allergies": "Alergias",
-    "medicalConditions": "Condiciones médicas"
-  },
-  "languages": {
-    "en": "Inglés",
-    "es": "Español",
-    "pt": "Portugués",
-    "fr": "Francés",
-    "zh": "Chino"
-  },
-  "alt": {
-    "logo": "Logo",
-    "ball": "Balón",
-    "redCard": "Tarjeta Roja",
-    "whistle": "Silbato",
-    "player": "Jugador"
-  },
-  "footer": {
-    "developedWithLove": "Desarrollado y diseñado con ❤️ por"
-  },
-  "sessionRefreshed": "Sesión extendida correctamente."
+    "medicalConditions": "Condiciones médicas",
+    "languages": {
+        "en": "Inglés",
+        "es": "Español",
+        "pt": "Portugués",
+        "fr": "Francés",
+        "zh": "Chino"
+    },
+    "alt": {
+        "logo": "Logo",
+        "ball": "Pelota",
+        "redCard": "Tarjeta roja",
+        "whistle": "Silbato",
+        "player": "Jugador"
+    },
+    "footer": {
+        "developedWithLove": "Desarrollado y diseñado con ❤️ por"
+    },
+    "sessionRefreshed": "Sesión extendida correctamente.",
+    "dashboard": {
+        "title": "Panel de control",
+        "openMenu": "Abrir menú",
+        "closeMenu": "Cerrar menú",
+        "avatarAlt": "Avatar de usuario",
+        "refresh": "Actualizar",
+        "logout": "Cerrar sesión",
+        "menu": {
+            "users": "Usuarios",
+            "user-details": "Detalles del usuario",
+            "change-password": "Cambiar contraseña"
+        }
+    },
+    "users": {
+        "details": {
+            "title": "Tu perfil",
+            "loadError": "No se pudieron cargar tus detalles.",
+            "saved": "Perfil actualizado.",
+            "saveError": "No se pudieron guardar los cambios.",
+            "noChanges": "No hay cambios para guardar.",
+            "uploadAvatar": "Subir nuevo avatar",
+            "uploading": "Subiendo…",
+            "removeAvatar": "Eliminar",
+            "avatarUploaded": "Avatar subido.",
+            "avatarUploadError": "No se pudo subir el avatar.",
+            "languageHint": "Cambiar el idioma requerirá una recarga después de guardar.",
+            "reloadForLanguage": "Idioma cambiado. ¿Recargar ahora para aplicar?"
+        },
+        "fields": {
+            "name": "Nombre",
+            "surname": "Apellido",
+            "languagePreference": "Idioma",
+            "profilePictureUrl": "URL de la imagen de perfil",
+            "phoneNumber": "Número de teléfono",
+            "addressLine1": "Dirección línea 1",
+            "addressLine2": "Dirección línea 2",
+            "city": "Ciudad",
+            "stateProvince": "Estado/Provincia",
+            "postalCode": "Código postal",
+            "country": "País",
+            "emergencyContactName": "Nombre de contacto de emergencia",
+            "emergencyContactPhone": "Teléfono de contacto de emergencia",
+            "emergencyContactRelationship": "Relación de contacto de emergencia",
+            "allergies": "Alergias",
+            "medicalConditions": "Condiciones médicas"
+        },
+        "password": {
+            "title": "Cambiar contraseña",
+            "current": "Contraseña actual",
+            "new": "Nueva contraseña",
+            "confirm": "Confirmar nueva contraseña",
+            "submit": "Actualizar contraseña",
+            "mismatch": "La nueva contraseña y su confirmación no coinciden.",
+            "changed": "Contraseña cambiada correctamente.",
+            "invalidCurrent": "Tu contraseña actual es incorrecta.",
+            "error": "No se pudo cambiar la contraseña.",
+            "instructions": "Usa al menos 8 caracteres con letras y números, al menos 1 letra mayúscula y al menos 1 símbolo (ej., @). Puntuación mínima de fuerza requerida: 7/10.",
+            "strength": "Fuerza: {{score}} / 10",
+            "tooWeak": "La contraseña es demasiado débil. Por favor, hazla más fuerte (≥ 7/10)."
+        }
+    },
+    "common": {
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "reset": "Restablecer"
+    },
+    "dummy": {
+        "authRequired": "Debes iniciar sesión para acceder al panel.",
+        "header": {
+            "title": "Vista general",
+            "subtitle": "Este es un panel de ejemplo con datos de prueba."
+        },
+        "actions": {
+            "export": "Exportar",
+            "viewDetails": "Ver detalles"
+        },
+        "stats": {
+            "costs": {
+                "title": "Costos",
+                "sublabel": "vs el mes pasado",
+                "delta": "−4.3%"
+            },
+            "revenue": {
+                "title": "Ingresos",
+                "sublabel": "vs el mes pasado",
+                "delta": "+8.9%"
+            },
+            "issues": {
+                "title": "Problemas abiertos",
+                "value": "12",
+                "sublabel": "triados",
+                "delta": "−2 desde ayer"
+            },
+            "aiInvoices": {
+                "title": "Facturas procesadas por IA",
+                "sublabel": "últimos 30 días",
+                "delta": "+11%"
+            },
+            "tickets": {
+                "title": "Tickets resueltos",
+                "sublabel": "esta semana",
+                "delta": "+6%"
+            },
+            "housesAI": {
+                "title": "Casas etiquetadas por IA",
+                "sublabel": "este mes",
+                "delta": "+14%"
+            }
+        },
+        "chart": {
+            "title": "Ingresos mensuales",
+            "subtitle": "Últimos 12 meses",
+            "legend": "Ingresos"
+        },
+        "whatsNew": {
+            "title": "¿Qué hay de nuevo?",
+            "item1": { "title": "Registro de auditoría", "body": "Hemos añadido más detalles a cada cambio." },
+            "item2": { "title": "Informes más rápidos", "body": "El procesamiento en segundo plano ha mejorado un 30%." },
+            "item3": { "title": "Nuevas integraciones", "body": "Conéctate con más herramientas de terceros." }
+        },
+        "quickActions": {
+            "title": "Acciones rápidas",
+            "openIssues": "Problemas abiertos",
+            "monthlyReport": "Informe mensual",
+            "helper": "Atajos a acciones de uso frecuente."
+        }
+    }
 }
