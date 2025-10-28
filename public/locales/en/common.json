@@ -315,5 +315,65 @@
       "monthlyReport": "Monthly report",
       "helper": "Shortcuts to commonly used actions."
     }
+  },
+  "alerts": {
+    "title": "Alerts",
+    "refresh": "Refresh",
+    "noAlerts": "No alerts",
+    "viewAll": "View all",
+    "loading": "Loading…",
+    "ago": "ago",
+    "new": "NEW",
+    "toast": {
+      "critical": "Critical alert: {{title}}",
+      "warning": "Warning: {{title}}",
+      "info": "Info: {{title}}",
+      "more": "{{count}} more new alert{{pluralSuffix}}…"
+    }
+  },
+  "severity": {
+    "info": "Information",
+    "warning": "Warning",
+    "critical": "Critical"
+  },
+  "alertsPage": {
+    "title": "Your alerts",
+    "filter": {
+      "label": "Severity",
+      "all": "All severities"
+    },
+    "table": {
+      "title": "Title",
+      "severity": "Severity",
+      "createdAt": "Created at",
+      "status": "Status"
+    },
+    "status": {
+      "read": "Read"
+    },
+    "pager": {
+      "summary": "{{from}}–{{to}} of {{total}}",
+      "prev": "Prev",
+      "next": "Next",
+      "pageOf": "Page {{page}} of {{totalPages}}"
+    },
+    "alertsPage": {
+    "toast": {
+      "detailError": "Could not load alert details.",
+      "markedRead": "Marked as read.",
+      "markReadError": "Failed to mark as read.",
+      "unexpectedShape": "Unexpected response shape."
+    },
+    "detail": {
+      "noData": "No details available.",
+      "noContent": "No additional content."
+    },
+    "alertModal": {
+    "title": "Alert details",
+    "markRead": "Mark as read",
+    "openInAlerts": "Close",
+    "close": "Close"
   }
+  }
+}
 }

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import LanguagePicker from '@/components/LanguagePicker';
 import { useAuth } from '@/context/authContext';
 import { useApi } from '@/utils/api';
+import AlertsBell from './AlertsBell';
 
 interface DashboardHeaderProps {
   avatarSrc: string;
@@ -32,15 +33,12 @@ export default function DashboardHeader({
     if (loggingOut) return;
     setLoggingOut(true);
     try {
-      // Hit backend to expire HttpOnly cookie
+      // Expire HttpOnly cookie on backend (ignore 4xx here)
       await api.post('/auth/logout', {}, { validateStatus: s => s < 500 }).catch(() => {});
 
-      // Clear client-side state
+      // Clear client storage
+      try { sessionStorage.clear(); } catch {}
       try {
-        sessionStorage.clear();
-      } catch {}
-      try {
-        // Remove common app keys (adjust if you have specific ones)
         localStorage.removeItem('userLang');
         localStorage.removeItem('myb4y_auth');
         localStorage.removeItem('sparc_auth');
@@ -48,11 +46,8 @@ export default function DashboardHeader({
       } catch {}
 
       // Reset auth context
-      try {
-        logout();
-      } catch {}
+      try { await logout(); } catch {}
 
-      // UX: toast + redirect
       toast.success(t('auth.loggedOutToast'));
       router.replace('/');
     } finally {
@@ -66,7 +61,7 @@ export default function DashboardHeader({
       <div className="flex items-center">
         <button
           onClick={onMenuClick}
-          className="mr-4 p-2"
+          className="mr-4 p-2 rounded hover:bg-white/10 transition"
           aria-label={t('dashboard.openMenu')}
         >
           <svg
@@ -81,8 +76,11 @@ export default function DashboardHeader({
         <h1 className="text-xl font-semibold">{t('dashboard.title')}</h1>
       </div>
 
-      {/* Right: Language picker + profile menu */}
-      <div className="flex items-center space-x-4">
+      {/* Right: alerts + language + profile */}
+      <div className="flex items-center gap-3">
+        {/* Bell with badge (polling handled inside) */}
+        <AlertsBell refreshMs={30000} />
+
         <LanguagePicker />
 
         <Menu as="div" className="relative">
