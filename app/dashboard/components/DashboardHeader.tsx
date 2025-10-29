@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import LanguagePicker from '@/components/LanguagePicker';
 import { useAuth } from '@/context/authContext';
 import { useApi } from '@/utils/api';
-import AlertsBell from './AlertsBell';
+import AlertsBell from './AlertsBell'; // ← use the shared SignalR version
 
 interface DashboardHeaderProps {
   avatarSrc: string;
@@ -78,8 +78,8 @@ export default function DashboardHeader({
 
       {/* Right: alerts + language + profile */}
       <div className="flex items-center gap-3">
-        {/* Bell with badge (polling handled inside) */}
-        <AlertsBell refreshMs={30000} />
+        {/* Bell with real-time updates via SignalR (no polling prop) */}
+        <AlertsBell />
 
         <LanguagePicker />
 

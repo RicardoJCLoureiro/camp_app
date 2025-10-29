@@ -1,4 +1,3 @@
-// components/AlertsBell.tsx
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -10,47 +9,32 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/authContext';
 import { useApi } from '@/utils/api';
 
-// Set to true only if you want local mock data.
-const MOCK = false;
-
 type Severity = 'info' | 'warning' | 'critical';
-
 type AlertItem = {
-  id: string | number;
+  id: number | string;
   title: string;
-  createdAt: string; // ISO 8601 string
+  createdAt: string;
   severity: Severity;
   read?: boolean;
 };
 
-type AlertsSummary = {
-  unreadCount: number;
-  items: AlertItem[];
-};
-
 export interface AlertsBellProps {
-  refreshMs?: number; // polling interval (default 30s)
-  maxVisible?: number; // items to show in dropdown (default 6)
+  refreshMs?: number;
+  maxVisible?: number;
   className?: string;
 }
 
 const severityColor = (sev: Severity) => {
   switch (sev) {
-    case 'critical':
-      return 'bg-red-600';
-    case 'warning':
-      return 'bg-amber-500';
-    default:
-      return 'bg-blue-500';
+    case 'critical': return 'bg-red-600';
+    case 'warning':  return 'bg-amber-500';
+    default:         return 'bg-blue-500';
   }
 };
 
 function timeAgo(iso: string) {
   const then = new Date(iso).getTime();
-  const now = Date.now();
-  const diff = Math.max(0, now - then);
-
-  const sec = Math.floor(diff / 1000);
+  const sec = Math.max(0, Math.floor((Date.now() - then) / 1000));
   if (sec < 60) return `${sec}s`;
   const min = Math.floor(sec / 60);
   if (min < 60) return `${min}m`;
@@ -58,34 +42,6 @@ function timeAgo(iso: string) {
   if (hr < 24) return `${hr}h`;
   const d = Math.floor(hr / 24);
   return `${d}d`;
-}
-
-// Local mock
-function mockFetch(): Promise<AlertsSummary> {
-  const base: AlertsSummary = {
-    unreadCount: Math.random() < 0.4 ? Math.floor(Math.random() * 4) : 2,
-    items: [
-      {
-        id: 1,
-        title: 'Policy document awaiting your review',
-        createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-        severity: 'info',
-      },
-      {
-        id: 2,
-        title: 'Expense report approaching limit',
-        createdAt: new Date(Date.now() - 35 * 60 * 1000).toISOString(),
-        severity: 'warning',
-      },
-      {
-        id: 3,
-        title: 'Server quota threshold exceeded',
-        createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-        severity: 'critical',
-      },
-    ],
-  };
-  return new Promise(res => setTimeout(() => res(base), 400));
 }
 
 export default function AlertsBell({
@@ -100,133 +56,91 @@ export default function AlertsBell({
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [summary, setSummary] = useState<AlertsSummary>({ unreadCount: 0, items: [] });
+  const [summary, setSummary] = useState<{ unreadCount: number; items: AlertItem[] }>({ unreadCount: 0, items: [] });
 
+  const userId = useMemo(() => user?.userId, [user]);
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  // Track previous items to detect "new" items and toast them
-  const prevIdsRef = useRef<Set<string | number>>(new Set());
-
-  const userId = useMemo(() => user?.userId, [user]);
-
-  const notifyNewItems = useCallback(
-    (prev: Set<string | number>, curr: AlertItem[]) => {
-      const newOnes = curr.filter(it => !prev.has(it.id));
-      if (newOnes.length === 0) return;
-
-      // Primary toast for the newest alert
-      const first = newOnes[0];
-      const key = `alerts.toast.${first.severity}` as const;
-      toast.info(t(key, { title: first.title }));
-
-      // “+N more…” toast
-      const more = newOnes.length - 1;
-      if (more > 0) {
-        toast.info(
-          t('alerts.toast.more', {
-            count: more,
-            plural: more > 1 ? 's' : '',
-            pluralSuffix: more > 1 ? 's' : '',
-          })
-        );
-      }
-    },
-    [t]
-  );
-
-  const fetchAlerts = useCallback(async () => {
-    // Guard: only if authenticated user is present
-    if (!userId) return;
+  const fetchUnreadCount = useCallback(async () => {
     try {
-      setLoading(true);
-
-      // Shape returned by backend: { unreadCount, items: [{ id, title, createdAt, severity, isRead }] }
-      type RawItem = {
-        id: string | number;
-        title: string;
-        createdAt: string;
-        severity: Severity;
-        isRead?: boolean;
-      };
-
-      const data: { unreadCount: number; items: RawItem[] } = MOCK
-        ? await mockFetch()
-        : (await api.get('/alerts/summary', { params: { max: maxVisible } })).data;
-
-      // Toast for new items BEFORE we slice/update state
-      notifyNewItems(prevIdsRef.current, data.items as AlertItem[]);
-
-      // Normalize: isRead -> read, and clamp to maxVisible
-      const normalized = (Array.isArray(data.items) ? data.items : [])
-        .slice(0, maxVisible)
-        .map(it => ({
-          id: it.id,
-          title: it.title,
-          createdAt: it.createdAt,
-          severity: it.severity,
-          read: !!it.isRead,
-        }));
-
-      setSummary({
-        unreadCount: data.unreadCount ?? 0,
-        items: normalized,
-      });
-
-      // Save current IDs for next comparison
-      const nextSet = new Set<string | number>();
-      for (const it of normalized) nextSet.add(it.id);
-      prevIdsRef.current = nextSet;
+      const res = await api.get<{ count: number }>('/alerts/unread-count');
+      return res.data?.count ?? 0;
     } catch {
-      // Silent on poll errors
+      return 0;
+    }
+  }, [api]);
+
+  const fetchLatest = useCallback(async () => {
+    try {
+      const res = await api.get('/alerts', {
+        params: { page: 1, pageSize: maxVisible, includeArchived: false },
+      });
+      const itemsRaw = Array.isArray(res.data?.items) ? res.data.items : [];
+
+      const items: AlertItem[] = itemsRaw.map((r: any) => ({
+        id: r?.alertId ?? r?.AlertId ?? r?.id ?? r?.Id,
+        title: r?.title ?? r?.Title ?? '',
+        createdAt: String(r?.createdAt ?? r?.CreatedAt ?? ''),
+        severity: (r?.severityCode ?? r?.SeverityCode ?? 'info') as Severity,
+        read: !!(r?.isRead ?? r?.IsRead ?? r?.read),
+      }));
+
+      return items;
+    } catch {
+      return [];
+    }
+  }, [api, maxVisible]);
+
+  const fetchAll = useCallback(async () => {
+    if (!userId) return;
+    setLoading(true);
+    try {
+      const [count, items] = await Promise.all([fetchUnreadCount(), fetchLatest()]);
+      setSummary({ unreadCount: count, items });
     } finally {
       setLoading(false);
     }
-  }, [api, maxVisible, notifyNewItems, userId]);
+  }, [fetchLatest, fetchUnreadCount, userId]);
 
-  // Initial fetch + polling (pause when tab hidden)
   useEffect(() => {
     if (!userId) return;
 
     let timer: ReturnType<typeof setInterval> | null = null;
 
     const start = async () => {
-      await fetchAlerts();
-      timer = setInterval(fetchAlerts, refreshMs);
+      await fetchAll();
+      timer = setInterval(fetchAll, refreshMs);
     };
 
     const onVisibility = () => {
       if (document.hidden) {
-        if (timer) {
-          clearInterval(timer);
-          timer = null;
-        }
+        if (timer) clearInterval(timer);
+        timer = null;
       } else {
-        fetchAlerts();
-        timer = setInterval(fetchAlerts, refreshMs);
+        fetchAll();
+        timer = setInterval(fetchAll, refreshMs);
       }
     };
 
     start();
     document.addEventListener('visibilitychange', onVisibility);
-
     return () => {
       if (timer) clearInterval(timer);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [fetchAlerts, refreshMs, userId]);
+  }, [fetchAll, refreshMs, userId]);
 
-  // Click outside to close
   useEffect(() => {
-    const onDocClick = (e: MouseEvent) => {
+    const onDoc = (e: MouseEvent) => {
       if (!open) return;
-      const tNode = e.target as Node;
-      if (panelRef.current?.contains(tNode)) return;
-      if (btnRef.current?.contains(tNode)) return;
+      const n = e.target as Node;
+      if (panelRef.current?.contains(n)) return;
+      if (btnRef.current?.contains(n)) return;
       setOpen(false);
     };
-    document.addEventListener('click', onDocClick);
-    return () => document.removeEventListener('click', onDocClick);
+    document.addEventListener('click', onDoc);
+    return () => document.removeEventListener('click', onDoc);
   }, [open]);
 
   const goToAlerts = useCallback(() => {
@@ -261,10 +175,7 @@ export default function AlertsBell({
         >
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <span className="font-semibold text-gray-800">{t('alerts.title')}</span>
-            <button
-              className="text-xs text-blue-600 hover:underline"
-              onClick={() => fetchAlerts()}
-            >
+            <button className="text-xs text-blue-600 hover:underline" onClick={fetchAll}>
               {t('alerts.refresh')}
             </button>
           </div>
@@ -285,9 +196,7 @@ export default function AlertsBell({
                   onClick={goToAlerts}
                 >
                   <span
-                    className={`mt-1 inline-block w-2.5 h-2.5 rounded-full ${severityColor(
-                      item.severity,
-                    )}`}
+                    className={`mt-1 inline-block w-2.5 h-2.5 rounded-full ${severityColor(item.severity)}`}
                     aria-hidden
                   />
                   <div className="flex-1 min-w-0">
@@ -309,10 +218,7 @@ export default function AlertsBell({
           )}
 
           <div className="px-4 py-3 border-t border-gray-100 text-right">
-            <button
-              onClick={goToAlerts}
-              className="text-sm text-blue-600 hover:underline"
-            >
+            <button onClick={goToAlerts} className="text-sm text-blue-600 hover:underline">
               {t('alerts.viewAll')}
             </button>
           </div>

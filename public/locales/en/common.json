@@ -340,11 +340,16 @@
     "title": "Your alerts",
     "filter": {
       "label": "Severity",
-      "all": "All severities"
+      "all": "All severities",
+      "status": "Status",
+      "statusActive": "Active",
+      "statusArchived": "Archived",
+      "statusAll": "All"
     },
     "table": {
       "title": "Title",
       "severity": "Severity",
+      "body": "Body",
       "createdAt": "Created at",
       "status": "Status"
     },
@@ -357,23 +362,22 @@
       "next": "Next",
       "pageOf": "Page {{page}} of {{totalPages}}"
     },
-    "alertsPage": {
     "toast": {
       "detailError": "Could not load alert details.",
       "markedRead": "Marked as read.",
       "markReadError": "Failed to mark as read.",
-      "unexpectedShape": "Unexpected response shape."
+      "unexpectedShape": "Unexpected response shape.",
+      "fetchError": "Could not load alerts."
     },
     "detail": {
       "noData": "No details available.",
       "noContent": "No additional content."
-    },
-    "alertModal": {
+    }
+  },
+  "alertModal": {
     "title": "Alert details",
     "markRead": "Mark as read",
-    "openInAlerts": "Close",
+    "openInAlerts": "Open in Alerts",
     "close": "Close"
   }
-  }
-}
 }
