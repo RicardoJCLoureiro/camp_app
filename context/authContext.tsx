@@ -12,7 +12,6 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useApi } from '@/utils/api';
-import IdleTimeoutModal from '@/components/IdleTimeoutModal';
 
 export interface UserProfile {
   userId: number;
@@ -95,8 +94,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [roles, setRoles] = useState<string[]>([]);
   const [access, setAccess] = useState<UserAccess[]>([]);
   const [expiresAt, setExpiresAt] = useState<number>(0);
-
-  const [showIdleModal, setShowIdleModal] = useState(false);
 
   // Utility to safely parse JSON
   const safeParse = <T,>(item: string | null, defaultValue: T): T => {
@@ -235,7 +232,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setRoles([]);
       setAccess([]);
       setExpiresAt(0);
-      setShowIdleModal(false);
+
+      // Cross-tab: notify other tabs to logout
+      try { localStorage.setItem('myb4y:logout', String(Date.now())); } catch {}
 
       toast.info(
         reason === 'inactivity'
@@ -247,6 +246,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = () => performLogout('inactivity');
+
+  // Enforce server-side expiry: logout exactly when the backend says so
+  useEffect(() => {
+    if (!expiresAt) return;
+
+    if (expiresAt <= Date.now()) {
+      performLogout('expiry');
+      return;
+    }
+
+    const ms = Math.max(0, expiresAt - Date.now());
+    const timer = window.setTimeout(() => performLogout('expiry'), ms);
+    return () => clearTimeout(timer);
+  }, [expiresAt]); // re-schedule whenever the server updates expiry
 
   return (
     <AuthContext.Provider
@@ -264,13 +277,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }}
     >
       {children}
-      {user && (
-        <IdleTimeoutModal
-          isOpen={showIdleModal}
-          onStay={() => setShowIdleModal(false)}
-          onLogout={() => performLogout('inactivity')}
-        />
-      )}
+      {/* Removed IdleTimeoutModal here to avoid duplicate modals.
+          The modal is now owned/controlled by app/dashboard/IdleClient.tsx */}
     </AuthContext.Provider>
   );
 };

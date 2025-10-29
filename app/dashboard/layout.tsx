@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/authContext';
 import DashboardHeader from './components/DashboardHeader';
 import SlidingMenu from './components/SlidingMenu';
+import IdleClient from './IdleClient';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation('common');
@@ -32,7 +33,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         onMenuClick={() => setMenuOpen(true)}
       />
       <SlidingMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
-      <main className="p-4 md:p-6 lg:p-8">{children}</main>
+      <main className="p-4 md:p-6 lg:p-8">
+        <IdleClient />
+        {children}</main>
     </div>
   );
 }
