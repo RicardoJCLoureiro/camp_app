@@ -20,6 +20,7 @@ type AlertItem = {
   severity: 'info' | 'warning' | 'critical';
   read?: boolean;
   body?: string | null;
+  colorHex?: string | null;
 };
 
 type AlertsListResponse = {
@@ -27,14 +28,6 @@ type AlertsListResponse = {
   page: number;
   pageSize: number;
   total: number;
-};
-
-const severityPill = (sev: 'info' | 'warning' | 'critical') => {
-  switch (sev) {
-    case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-    case 'warning':  return 'bg-amber-100 text-amber-800 border-amber-200';
-    default:         return 'bg-blue-100 text-blue-800 border-blue-200';
-  }
 };
 
 function formatDate(iso: string) {
@@ -45,8 +38,24 @@ function clip(s: string | null | undefined, n = 160) {
   if (!s) return '';
   return s.length <= n ? s : s.slice(0, n - 1) + '…';
 }
+function hexToRgba(hex: string, alpha = 0.12) {
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!m) return `rgba(59,130,246,${alpha})`; // default blue-500 @ ~12%
+  const r = parseInt(m[1], 16);
+  const g = parseInt(m[2], 16);
+  const b = parseInt(m[3], 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+const severityPillStyle = (hex?: string | null) => {
+  if (!hex) return {};
+  return {
+    color: hex,
+    borderColor: hex,
+    backgroundColor: hexToRgba(hex, 0.12),
+  } as React.CSSProperties;
+};
 
-/** Ensure every item has an id; normalize server payload shape */
+/** Normalize backend payload */
 function normalizeFromBackend(raw: any, fallbackPage: number, fallbackPageSize: number): AlertsListResponse {
   const itemsRaw = Array.isArray(raw?.items) ? raw.items : [];
 
@@ -61,6 +70,7 @@ function normalizeFromBackend(raw: any, fallbackPage: number, fallbackPageSize: 
       severity: (r?.severityCode ?? r?.SeverityCode ?? 'info') as 'info' | 'warning' | 'critical',
       read: !!(r?.isRead ?? r?.IsRead ?? r?.read),
       body: r?.body ?? r?.Body ?? null,
+      colorHex: r?.colorHex ?? r?.ColorHex ?? null,
     };
   });
 
@@ -104,11 +114,8 @@ export default function AlertsPage() {
     try {
       const params: Record<string, any> = { page, pageSize };
 
-      // Map UI status to API flags
       if (status === 'unread') params.onlyUnread = true;
       if (status === 'all') params.includeArchived = true;
-      // active => default (includeArchived=false, onlyUnread=false)
-
       if (severity !== 'all') params.severity = severity;
 
       const res = await api.get('/alerts', { params });
@@ -126,17 +133,41 @@ export default function AlertsPage() {
     }
   }, [api, page, pageSize, severity, status, t, userId, router]);
 
+  // Bulk actions
+  const markAllRead = useCallback(async () => {
+    try {
+      await api.post('/alerts/read-all', {}); // optionally { before: '...' }
+      toast.success(t('alertsPage.toast.markAllReadOk'));
+      await fetchAlerts();
+    } catch {
+      toast.error(t('alertsPage.toast.markAllReadError'));
+    }
+  }, [api, fetchAlerts, t]);
+
+  const archiveAllRead = useCallback(async () => {
+    try {
+      await api.post('/alerts/archive-all', { onlyRead: true }); // optionally { before: '...' }
+      toast.success(t('alertsPage.toast.archiveAllOk'));
+      await fetchAlerts();
+    } catch {
+      toast.error(t('alertsPage.toast.archiveAllError'));
+    }
+  }, [api, fetchAlerts, t]);
+
+  // Initial fetch
   useEffect(() => {
     if (!loaded) return;
     if (!userId) { router.replace('/'); return; }
     fetchAlerts();
   }, [fetchAlerts, loaded, router, userId]);
 
+  // Filter resets
   useEffect(() => {
     if (!userId || !loaded) return;
     setPage(1);
   }, [status, severity, loaded, userId]);
 
+  // Page changes
   useEffect(() => {
     if (!userId || !loaded) return;
     fetchAlerts();
@@ -144,34 +175,55 @@ export default function AlertsPage() {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h1 className="text-xl font-semibold text-gray-800">{t('alertsPage.title')}</h1>
+      <div className="mb-4 flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h1 className="text-xl font-semibold text-gray-800">{t('alertsPage.title')}</h1>
 
+          {/* Filters */}
+          <div className="flex items-center gap-3">
+            <label htmlFor="status" className="text-sm text-gray-600">{t('alertsPage.filter.status')}</label>
+            <select
+              id="status"
+              className="border rounded-md p-2 text-sm"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as Status)}
+            >
+              <option value="active">{t('alertsPage.filter.statusActive')}</option>
+              <option value="unread">{t('alertsPage.filter.statusUnread')}</option>
+              <option value="all">{t('alertsPage.filter.statusAll')}</option>
+            </select>
+
+            <label htmlFor="severity" className="text-sm text-gray-600">{t('alertsPage.filter.label')}</label>
+            <select
+              id="severity"
+              className="border rounded-md p-2 text-sm"
+              value={severity}
+              onChange={(e) => setSeverity(e.target.value as Severity)}
+            >
+              <option value="all">{t('alertsPage.filter.all')}</option>
+              <option value="info">{t('severity.info')}</option>
+              <option value="warning">{t('severity.warning')}</option>
+              <option value="critical">{t('severity.critical')}</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Bulk actions */}
         <div className="flex items-center gap-3">
-          <label htmlFor="status" className="text-sm text-gray-600">{t('alertsPage.filter.status')}</label>
-          <select
-            id="status"
-            className="border rounded-md p-2 text-sm"
-            value={status}
-            onChange={(e) => setStatus(e.target.value as Status)}
+          <button
+            className="px-3 py-2 rounded-lg text-sm bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50"
+            onClick={markAllRead}
+            disabled={loading || data.items.length === 0}
           >
-            <option value="active">{t('alertsPage.filter.statusActive')}</option>
-            <option value="unread">{t('alertsPage.filter.statusUnread')}</option>
-            <option value="all">{t('alertsPage.filter.statusAll')}</option>
-          </select>
-
-          <label htmlFor="severity" className="text-sm text-gray-600">{t('alertsPage.filter.label')}</label>
-          <select
-            id="severity"
-            className="border rounded-md p-2 text-sm"
-            value={severity}
-            onChange={(e) => setSeverity(e.target.value as Severity)}
+            {t('alertsPage.actions.markAllRead')}
+          </button>
+          <button
+            className="px-3 py-2 rounded-lg text-sm bg-gray-800 text-white hover:bg-gray-900 transition disabled:opacity-50"
+            onClick={archiveAllRead}
+            disabled={loading || data.items.length === 0}
           >
-            <option value="all">{t('alertsPage.filter.all')}</option>
-            <option value="info">{t('severity.info')}</option>
-            <option value="warning">{t('severity.warning')}</option>
-            <option value="critical">{t('severity.critical')}</option>
-          </select>
+            {t('alertsPage.actions.archiveAllRead')}
+          </button>
         </div>
       </div>
 
@@ -199,13 +251,20 @@ export default function AlertsPage() {
                 <li
                   key={key}
                   className="grid grid-cols-12 px-4 py-3 hover:bg-gray-50 cursor-pointer"
-                  onClick={() => openDetail(it)}
+                  onClick={() => {
+                    // open detail modal
+                    setSelected(it);
+                    setDetailOpen(true);
+                  }}
                 >
                   <div className="col-span-4 truncate">
                     <div className="text-gray-900 text-[15px] font-medium truncate">{it.title}</div>
                   </div>
                   <div className="col-span-2">
-                    <span className={`inline-block px-2 py-0.5 text-xs border rounded ${severityPill(it.severity)}`}>
+                    <span
+                      className="inline-block px-2 py-0.5 text-xs border rounded"
+                      style={severityPillStyle(it.colorHex)}
+                    >
                       {t(`severity.${it.severity}`)}
                     </span>
                   </div>

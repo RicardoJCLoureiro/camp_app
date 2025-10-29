@@ -197,9 +197,9 @@
     "logout": "Log Out",
     "menu": {
       "users": "Users",
-    "overview": "Overview",
-    "user-details": "User details",
-    "change-password": "Change password"
+      "overview": "Overview",
+      "user-details": "User details",
+      "change-password": "Change password"
     }
   },
   "users": {
@@ -344,7 +344,12 @@
       "status": "Status",
       "statusActive": "Active",
       "statusArchived": "Archived",
-      "statusAll": "All"
+      "statusAll": "All",
+      "statusUnread": "Unread"
+    },
+    "actions": {
+      "markAllRead": "Mark all as read",
+      "archiveAllRead": "Archive all read"
     },
     "table": {
       "title": "Title",
@@ -367,7 +372,11 @@
       "markedRead": "Marked as read.",
       "markReadError": "Failed to mark as read.",
       "unexpectedShape": "Unexpected response shape.",
-      "fetchError": "Could not load alerts."
+      "fetchError": "Could not load alerts.",
+      "markAllReadOk": "Marked all as read",
+      "markAllReadError": "Could not mark all as read",
+      "archiveAllOk": "Archived read alerts",
+      "archiveAllError": "Could not archive read alerts"
     },
     "detail": {
       "noData": "No details available.",
