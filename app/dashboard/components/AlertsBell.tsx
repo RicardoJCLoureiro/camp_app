@@ -1,16 +1,11 @@
-// components/AlertsBell.tsx
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BellRing, Loader2 } from 'lucide-react';
-import { useAuth } from '@/context/authContext';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/navigation';
 import { useApi } from '@/utils/api';
 
-// Toggle this to false when your API endpoint is ready.
-const MOCK = true;
-
 type Severity = 'info' | 'warning' | 'critical';
-
 type AlertItem = {
   id: string | number;
   title: string;
@@ -18,226 +13,290 @@ type AlertItem = {
   severity: Severity;
   read?: boolean;
 };
+type AlertsSummary = { unreadCount: number; items: AlertItem[] };
 
-type AlertsSummary = {
-  unreadCount: number;
-  items: AlertItem[];
-};
-
-export interface AlertsBellProps {
-  refreshMs?: number; // polling interval (default 30s)
-  maxVisible?: number; // items to show in dropdown (default 6)
-  className?: string;
+interface Props {
+  /** Polling interval (ms). Default: 30s */
+  refreshMs?: number;
 }
 
-const severityColor = (sev: Severity) => {
-  switch (sev) {
-    case 'critical':
-      return 'bg-red-600';
-    case 'warning':
-      return 'bg-amber-500';
-    default:
-      return 'bg-blue-500';
-  }
-};
-
 function timeAgo(iso: string) {
-  const then = new Date(iso).getTime();
-  const now = Date.now();
-  const diff = Math.max(0, now - then);
-
+  const d = new Date(iso).getTime();
+  const diff = Math.max(0, Date.now() - d);
   const sec = Math.floor(diff / 1000);
   if (sec < 60) return `${sec}s`;
   const min = Math.floor(sec / 60);
   if (min < 60) return `${min}m`;
   const hr = Math.floor(min / 60);
   if (hr < 24) return `${hr}h`;
-  const d = Math.floor(hr / 24);
-  return `${d}d`;
+  const day = Math.floor(hr / 24);
+  return `${day}d`;
 }
 
-function mockFetch(): Promise<AlertsSummary> {
-  const base: AlertsSummary = {
-    unreadCount: Math.random() < 0.4 ? Math.floor(Math.random() * 4) : 2,
-    items: [
-      {
-        id: 1,
-        title: 'Policy document awaiting your review',
-        createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-        severity: 'info',
-      },
-      {
-        id: 2,
-        title: 'Expense report approaching limit',
-        createdAt: new Date(Date.now() - 35 * 60 * 1000).toISOString(),
-        severity: 'warning',
-      },
-      {
-        id: 3,
-        title: 'Server quota threshold exceeded',
-        createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-        severity: 'critical',
-      },
-    ],
-  };
-  return new Promise(res => setTimeout(() => res(base), 400));
-}
-
-export default function AlertsBell({
-  refreshMs = 30000,
-  maxVisible = 6,
-  className = '',
-}: AlertsBellProps) {
-  const { user } = useAuth();
+export default function AlertsBell({ refreshMs = 30_000 }: Props) {
+  const { t } = useTranslation('common');
   const api = useApi();
+  const router = useRouter();
 
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [summary, setSummary] = useState<AlertsSummary>({ unreadCount: 0, items: [] });
+  const [open, setOpen] = React.useState(false);
+  const btnRef = React.useRef<HTMLButtonElement | null>(null);
+  const panelRef = React.useRef<HTMLDivElement | null>(null);
 
-  const btnRef = useRef<HTMLButtonElement | null>(null);
-  const panelRef = useRef<HTMLDivElement | null>(null);
+  const [summary, setSummary] = React.useState<AlertsSummary>({
+    unreadCount: 0,
+    items: [],
+  });
 
-  const userId = useMemo(() => user?.userId, [user]);
-
-  const fetchAlerts = useCallback(async () => {
-    if (!userId) return;
+  const fetchAlerts = React.useCallback(async () => {
     try {
-      setLoading(true);
-      const data: AlertsSummary = MOCK
-        ? await mockFetch()
-        : (await api.get('/alerts/summary', { params: { userId } })).data;
-
-      setSummary({
-        unreadCount: data.unreadCount ?? 0,
-        items: Array.isArray(data.items) ? data.items.slice(0, maxVisible) : [],
-      });
+      const res = await api.get<AlertsSummary>('/alerts/summary');
+      setSummary(res.data ?? { unreadCount: 0, items: [] });
     } catch {
-      // silent on poll
-    } finally {
-      setLoading(false);
+      // silent; bell shouldn't toast
     }
-  }, [api, maxVisible, userId]);
+  }, [api]);
 
-  // Initial fetch + polling
-  useEffect(() => {
-    if (!userId) return;
-
-    let timer: ReturnType<typeof setInterval> | null = null;
+  // Initial + polling with visibility handling (DOM timers)
+  React.useEffect(() => {
+    let timer: number | null = null;
+    let stopped = false;
 
     const start = async () => {
       await fetchAlerts();
-      timer = setInterval(fetchAlerts, refreshMs);
+      if (stopped) return;
+      timer = window.setInterval(fetchAlerts, refreshMs);
+    };
+
+    const stop = () => {
+      if (timer !== null) {
+        window.clearInterval(timer);
+        timer = null;
+      }
     };
 
     const onVisibility = () => {
       if (document.hidden) {
-        if (timer) {
-          clearInterval(timer);
-          timer = null;
-        }
+        stop();
       } else {
-        fetchAlerts();
-        timer = setInterval(fetchAlerts, refreshMs);
+        stop();
+        fetchAlerts().finally(() => {
+          if (!stopped) timer = window.setInterval(fetchAlerts, refreshMs);
+        });
       }
     };
 
     start();
     document.addEventListener('visibilitychange', onVisibility);
-
     return () => {
-      if (timer) clearInterval(timer);
+      stopped = true;
+      stop();
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [fetchAlerts, refreshMs, userId]);
+  }, [fetchAlerts, refreshMs]);
 
-  // Click outside to close
-  useEffect(() => {
+  // Close on outside click
+  React.useEffect(() => {
+    if (!open) return;
     const onDocClick = (e: MouseEvent) => {
-      if (!open) return;
       const t = e.target as Node;
-      if (panelRef.current?.contains(t)) return;
-      if (btnRef.current?.contains(t)) return;
-      setOpen(false);
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(t) &&
+        btnRef.current &&
+        !btnRef.current.contains(t)
+      ) {
+        setOpen(false);
+      }
     };
-    document.addEventListener('click', onDocClick);
-    return () => document.removeEventListener('click', onDocClick);
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
   }, [open]);
 
+  // ESC to close
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  const goToAlertsPage = React.useCallback(
+    (id?: string | number) => {
+      setOpen(false);
+      // Deep-link with ?id= for future auto-open; the page can ignore it safely today.
+      const url = id != null ? `/dashboard/alerts?id=${encodeURIComponent(String(id))}` : '/dashboard/alerts';
+      router.push(url);
+    },
+    [router]
+  );
+
+  // ---- UI helpers (modern, consistent Tailwind look) ----
+  const pill = (s: Severity) =>
+    s === 'critical'
+      ? 'bg-red-100 text-red-800'
+      : s === 'warning'
+      ? 'bg-amber-100 text-amber-800'
+      : 'bg-sky-100 text-sky-800';
+
+  const bellHasUnread = summary.unreadCount > 0;
+
   return (
-    <div className={`relative ${className}`}>
+    <div className="relative">
+      {/* BELL BUTTON — soft gradient, subtle ring, tiny pulse if unread */}
       <button
+        id="alerts-bell"
         ref={btnRef}
         type="button"
-        aria-label="Notifications"
-        onClick={() => setOpen(o => !o)}
-        className="relative inline-flex items-center justify-center p-2 rounded-full hover:bg-gray-100 transition"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls="alerts-popover"
+        onClick={() => setOpen((o) => !o)}
+        className={[
+          'relative inline-flex h-10 w-10 items-center justify-center rounded-full',
+          'bg-gradient-to-b from-white to-gray-100 dark:from-zinc-800 dark:to-zinc-900',
+          'shadow-sm ring-1 ring-black/5 dark:ring-white/10',
+          'transition-transform hover:scale-[1.03] active:scale-95',
+        ].join(' ')}
+        title={t('alertsBell.title', 'Alerts')}
       >
-        <BellRing className="w-6 h-6 text-gray-700" />
-        {summary.unreadCount > 0 && (
-          <span
-            className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[11px] leading-[18px] text-center shadow"
-            aria-label={`${summary.unreadCount} unread alerts`}
-          >
-            {summary.unreadCount > 99 ? '99+' : summary.unreadCount}
-          </span>
+        {/* Bell icon (clean, currentColor) */}
+        <svg viewBox="0 0 24 24" className="h-5 w-5 text-gray-800 dark:text-zinc-200" aria-hidden="true">
+          <path
+            d="M12 2a6 6 0 00-6 6v2.586c0 .265-.105.52-.293.707L4.293 13A1 1 0 005 14.707h14A1 1 0 0020 13l-1.414-1.414A1 1 0 0118 10.586V8a6 6 0 00-6-6z"
+            fill="currentColor"
+          />
+          <path d="M8 18a4 4 0 008 0H8z" fill="currentColor" />
+        </svg>
+
+        {/* Unread badge with glow + gentle pulse */}
+        {bellHasUnread && (
+          <>
+            <span
+              className={[
+                'absolute -top-0.5 -right-0.5 inline-flex min-w-[1.25rem] h-5 items-center justify-center',
+                'rounded-full bg-red-600 px-1 text-xs font-semibold text-white',
+                'shadow-[0_0_0_2px] shadow-white dark:shadow-zinc-900',
+              ].join(' ')}
+            >
+              {summary.unreadCount > 99 ? '99+' : summary.unreadCount}
+            </span>
+            <span
+              className="absolute -top-0.5 -right-0.5 block h-5 w-5 animate-ping rounded-full bg-red-500/50"
+              aria-hidden="true"
+            />
+          </>
         )}
       </button>
 
+      {/* POPOVER PANEL — glass card, soft shadow, subtle border, blur */}
       {open && (
         <div
+          id="alerts-popover"
           ref={panelRef}
-          className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50"
+          role="menu"
+          aria-labelledby="alerts-bell"
+          className={[
+            'absolute right-0 mt-3 w-96 origin-top-right overflow-hidden rounded-2xl',
+            'border border-black/5 bg-white/80 backdrop-blur-xl dark:bg-zinc-900/70 dark:border-white/10',
+            'shadow-xl ring-1 ring-black/5 dark:ring-white/10',
+          ].join(' ')}
         >
-          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <span className="font-semibold text-gray-800">Alerts</span>
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="text-sm font-semibold text-gray-900 dark:text-zinc-100">
+              {t('alertsBell.header', 'Notifications')}
+            </div>
             <button
-              className="text-xs text-blue-600 hover:underline"
-              onClick={() => fetchAlerts()}
+              type="button"
+              onClick={() => goToAlertsPage()}
+              className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-sky-400 dark:hover:text-sky-300"
             >
-              Refresh
+              {t('alertsBell.viewAll', 'View all')}
             </button>
           </div>
 
-          {loading ? (
-            <div className="flex items-center gap-2 px-4 py-6 text-gray-600">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Loading…</span>
-            </div>
-          ) : summary.items.length === 0 ? (
-            <div className="px-4 py-6 text-gray-500 text-sm">No alerts</div>
-          ) : (
-            <ul className="max-h-96 overflow-auto">
-              {summary.items.map(item => (
-                <li key={item.id} className="px-4 py-3 hover:bg-gray-50 transition flex gap-3">
-                  <span
-                    className={`mt-1 inline-block w-2.5 h-2.5 rounded-full ${severityColor(
-                      item.severity,
-                    )}`}
-                    aria-hidden
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-medium text-gray-900 truncate">
-                      {item.title}
-                    </div>
-                    <div className="text-[12px] text-gray-500">
-                      {timeAgo(item.createdAt)} ago
-                    </div>
-                  </div>
-                  {!item.read && (
-                    <span className="self-center text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
-                      NEW
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
+          {/* List */}
+          <div className="max-h-96 overflow-auto">
+            {summary.items.length === 0 ? (
+              <div className="px-4 py-10 text-center text-sm text-gray-600 dark:text-zinc-400">
+                {t('alertsBell.empty', 'No recent alerts')}
+              </div>
+            ) : (
+              <ul className="divide-y divide-black/5 dark:divide-white/10">
+                {summary.items.map((a) => (
+                  <li key={a.id}>
+                    <button
+                      type="button"
+                      onClick={() => goToAlertsPage(a.id)}
+                      className={[
+                        'group flex w-full items-start gap-3 px-4 py-3 text-left',
+                        'transition-all hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent dark:hover:from-white/5',
+                      ].join(' ')}
+                    >
+                      {/* Dot for unread with gradient halo */}
+                      <div className="mt-1">
+                        {!a.read ? (
+                          <span className="relative block h-2.5 w-2.5 rounded-full bg-blue-600">
+                            <span className="absolute inset-0 animate-ping rounded-full bg-blue-500/50" />
+                          </span>
+                        ) : (
+                          <span className="block h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-zinc-700" />
+                        )}
+                      </div>
 
-          <div className="px-4 py-3 border-t border-gray-100 text-right">
-            <a href="/alerts" className="text-sm text-blue-600 hover:underline">
-              View all
-            </a>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="truncate text-sm font-medium text-gray-900 dark:text-zinc-100">
+                            {a.title}
+                          </span>
+                          <span
+                            className={[
+                              'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium',
+                              a.severity === 'critical'
+                                ? 'bg-gradient-to-r from-red-500 to-rose-500 text-white'
+                                : a.severity === 'warning'
+                                ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white'
+                                : 'bg-gradient-to-r from-sky-400 to-blue-500 text-white',
+                              'shadow-sm',
+                            ].join(' ')}
+                          >
+                            {a.severity}
+                          </span>
+                        </div>
+                        <div className="mt-1 flex items-center gap-2 text-xs text-gray-500 dark:text-zinc-400">
+                          <time
+                            dateTime={a.createdAt}
+                            title={new Date(a.createdAt).toLocaleString()}
+                          >
+                            {timeAgo(a.createdAt)} {t('alertsBell.ago', 'ago')}
+                          </time>
+                          <span className="opacity-40">•</span>
+                          <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+                            {t('alertsBell.open', 'Open details')}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between px-4 py-3">
+            <span className="text-xs text-gray-600 dark:text-zinc-400">
+              {t('alertsBell.footer', 'Updates automatically')}
+            </span>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="text-xs font-medium text-gray-700 hover:text-gray-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+            >
+              {t('common.close', 'Close')}
+            </button>
           </div>
         </div>
       )}

@@ -1,325 +1,403 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
-
-import { useAuth } from '@/context/authContext';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useApi } from '@/utils/api';
-import AlertDetailModal from '@/app/dashboard/components/AlertDetailModal';
+import AlertDetailModal from '../components/AlertDetailModal';
 
-type Status = 'active' | 'unread' | 'all';
-type Severity = 'all' | 'info' | 'warning' | 'critical';
+type Severity = 'info' | 'warning' | 'critical';
 
-type AlertItem = {
-  id: number | string;
+export type AlertItem = {
+  id: string | number;
   title: string;
-  createdAt: string;   // ISO
-  severity: 'info' | 'warning' | 'critical';
+  body?: string;
+  createdAt: string; // ISO
+  severity: Severity;
   read?: boolean;
-  body?: string | null;
-  colorHex?: string | null;
+  archived?: boolean;
 };
 
-type AlertsListResponse = {
+type AlertsQuery = {
+  page: number;
+  pageSize: number;
+  onlyUnread?: boolean;
+  includeArchived?: boolean;
+  severity?: Severity;
+};
+
+type AlertsResponse = {
+  items: Array<{
+    id: string | number;
+    title: string;
+    message?: string;
+    createdAt: string;
+    severity: Severity;
+    read?: boolean;
+    archived?: boolean;
+  }>;
+  total: number;
+};
+
+type AlertsState = {
   items: AlertItem[];
   page: number;
   pageSize: number;
   total: number;
 };
 
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString();
-}
-function clip(s: string | null | undefined, n = 160) {
-  if (!s) return '';
-  return s.length <= n ? s : s.slice(0, n - 1) + '…';
-}
-function hexToRgba(hex: string, alpha = 0.12) {
-  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!m) return `rgba(59,130,246,${alpha})`; // default blue-500 @ ~12%
-  const r = parseInt(m[1], 16);
-  const g = parseInt(m[2], 16);
-  const b = parseInt(m[3], 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-const severityPillStyle = (hex?: string | null) => {
-  if (!hex) return {};
+const DEFAULT_PAGE_SIZE = 10;
+
+function normalizeFromBackend(
+  res: AlertsResponse,
+  page: number,
+  pageSize: number
+): AlertsState {
+  const items: AlertItem[] = (res?.items ?? []).map((a) => ({
+    id: a.id,
+    title: a.title,
+    body: a.message ?? '',
+    createdAt: a.createdAt,
+    severity: a.severity,
+    read: !!a.read,
+    archived: !!a.archived,
+  }));
   return {
-    color: hex,
-    borderColor: hex,
-    backgroundColor: hexToRgba(hex, 0.12),
-  } as React.CSSProperties;
-};
-
-/** Normalize backend payload */
-function normalizeFromBackend(raw: any, fallbackPage: number, fallbackPageSize: number): AlertsListResponse {
-  const itemsRaw = Array.isArray(raw?.items) ? raw.items : [];
-
-  const items: AlertItem[] = itemsRaw.map((r: any) => {
-    const id =
-      r?.alertId ?? r?.AlertId ?? r?.id ?? r?.Id ??
-      `${r?.title ?? 'alert'}-${r?.createdAt ?? Math.random()}`;
-    return {
-      id,
-      title: r?.title ?? r?.Title ?? '',
-      createdAt: String(r?.createdAt ?? r?.CreatedAt ?? ''),
-      severity: (r?.severityCode ?? r?.SeverityCode ?? 'info') as 'info' | 'warning' | 'critical',
-      read: !!(r?.isRead ?? r?.IsRead ?? r?.read),
-      body: r?.body ?? r?.Body ?? null,
-      colorHex: r?.colorHex ?? r?.ColorHex ?? null,
-    };
-  });
-
-  const page = Number(raw?.page ?? raw?.Page) || fallbackPage;
-  const pageSize = Number(raw?.pageSize ?? raw?.PageSize) || fallbackPageSize;
-  const total = Number(raw?.totalCount ?? raw?.TotalCount ?? raw?.total ?? raw?.Total ?? items.length) || 0;
-
-  return { items, page, pageSize, total };
+    items,
+    page,
+    pageSize,
+    total: res?.total ?? items.length,
+  };
 }
 
 export default function AlertsPage() {
   const { t } = useTranslation('common');
   const router = useRouter();
+  const searchParams = useSearchParams();
   const api = useApi();
-  const { user, loaded } = useAuth();
 
-  const userId = user?.userId || null;
-  const [status, setStatus] = useState<Status>('active');
-  const [severity, setSeverity] = useState<Severity>('all');
-  const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(10);
+  const [loading, setLoading] = React.useState<boolean>(true);
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [data, setData] = useState<AlertsListResponse>({ items: [], page: 1, pageSize, total: 0 });
+  const [status, setStatus] = React.useState<'all' | 'unread'>('all');
+  const [severity, setSeverity] = React.useState<'all' | Severity>('all');
 
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [selected, setSelected] = useState<AlertItem | null>(null);
-  const openDetail = (it: AlertItem) => { setSelected(it); setDetailOpen(true); };
-  const handleMarkedRead = (id: number | string) => {
-    setData(prev => ({ ...prev, items: prev.items.map(x => (String(x.id) === String(id) ? { ...x, read: true } : x)) }));
-  };
+  const [page, setPage] = React.useState<number>(1);
+  const [pageSize, setPageSize] = React.useState<number>(DEFAULT_PAGE_SIZE);
 
-  const totalPages = useMemo(
-    () => (data.total <= 0 ? 1 : Math.max(1, Math.ceil(data.total / data.pageSize))),
-    [data.total, data.pageSize]
-  );
+  const [data, setData] = React.useState<AlertsState>({
+    items: [],
+    page: 1,
+    pageSize: DEFAULT_PAGE_SIZE,
+    total: 0,
+  });
 
-  const fetchAlerts = useCallback(async () => {
-    if (!userId) return;
+  const [selected, setSelected] = React.useState<AlertItem | null>(null);
+  const [detailOpen, setDetailOpen] = React.useState(false);
+
+  // Guard against stale requests
+  const fetchIdRef = React.useRef(0);
+
+  const fetchAlerts = React.useCallback(async () => {
+    const thisFetchId = ++fetchIdRef.current;
     setLoading(true);
     try {
-      const params: Record<string, any> = { page, pageSize };
-
+      const params: AlertsQuery = { page, pageSize };
       if (status === 'unread') params.onlyUnread = true;
       if (status === 'all') params.includeArchived = true;
-      if (severity !== 'all') params.severity = severity;
+      if (severity !== 'all') params.severity = severity as Severity;
 
-      const res = await api.get('/alerts', { params });
+      const res = await api.get<AlertsResponse>('/alerts', { params });
+      if (thisFetchId !== fetchIdRef.current) return; // ignore stale
+
       const normalized = normalizeFromBackend(res.data, page, pageSize);
       setData(normalized);
     } catch (err: any) {
-      setData(prev => ({ ...prev, items: [], total: 0 }));
+      if (thisFetchId !== fetchIdRef.current) return;
+      setData((prev) => ({ ...prev, items: [], total: 0 }));
       if (err?.response?.status === 401) {
         router.replace('/');
       } else {
         toast.error(t('alertsPage.toast.fetchError'));
       }
     } finally {
-      setLoading(false);
+      if (thisFetchId === fetchIdRef.current) setLoading(false);
     }
-  }, [api, page, pageSize, severity, status, t, userId, router]);
+  }, [api, page, pageSize, severity, status, t, router]);
 
-  // Bulk actions
-  const markAllRead = useCallback(async () => {
+  // Initial + whenever filters/paging change
+  React.useEffect(() => {
+    fetchAlerts();
+  }, [fetchAlerts]);
+
+  // If filters change, reset to page 1
+  React.useEffect(() => {
+    setPage(1);
+  }, [status, severity]);
+
+  // Auto-open if URL has ?id=
+  React.useEffect(() => {
+    const idParam = searchParams.get('id');
+    if (!idParam || data.items.length === 0) return;
+    const found = data.items.find((it) => String(it.id) === idParam);
+    if (found) {
+      setSelected(found);
+      setDetailOpen(true);
+    }
+  }, [searchParams, data.items]);
+
+  const openDetail = (alert: AlertItem) => {
+    setSelected(alert);
+    setDetailOpen(true);
+  };
+
+  const onMarkedRead = (id: string | number) => {
+    setData((prev) => ({
+      ...prev,
+      items: prev.items.map((it) => (it.id === id ? { ...it, read: true } : it)),
+    }));
+  };
+
+  const markAllRead = async () => {
     try {
-      await api.post('/alerts/read-all', {}); // optionally { before: '...' }
-      toast.success(t('alertsPage.toast.markAllReadOk'));
-      await fetchAlerts();
+      await api.post('/alerts/mark-all-read');
+      setData((prev) => ({
+        ...prev,
+        items: prev.items.map((it) => ({ ...it, read: true })),
+      }));
+      toast.success(t('alertsPage.toast.markedAllRead'));
     } catch {
       toast.error(t('alertsPage.toast.markAllReadError'));
     }
-  }, [api, fetchAlerts, t]);
+  };
 
-  const archiveAllRead = useCallback(async () => {
+  const archiveAll = async () => {
     try {
-      await api.post('/alerts/archive-all', { onlyRead: true }); // optionally { before: '...' }
-      toast.success(t('alertsPage.toast.archiveAllOk'));
-      await fetchAlerts();
+      await api.post('/alerts/archive-all');
+      toast.success(t('alertsPage.toast.archivedAll', 'All alerts archived'));
+      fetchAlerts();
     } catch {
-      toast.error(t('alertsPage.toast.archiveAllError'));
+      toast.error(t('alertsPage.toast.archiveAllError', 'Failed to archive alerts'));
     }
-  }, [api, fetchAlerts, t]);
+  };
 
-  // Initial fetch
-  useEffect(() => {
-    if (!loaded) return;
-    if (!userId) { router.replace('/'); return; }
-    fetchAlerts();
-  }, [fetchAlerts, loaded, router, userId]);
+  const pageFrom = data.total === 0 ? 0 : (data.page - 1) * data.pageSize + 1;
+  const pageTo = Math.min(data.page * data.pageSize, data.total);
 
-  // Filter resets
-  useEffect(() => {
-    if (!userId || !loaded) return;
-    setPage(1);
-  }, [status, severity, loaded, userId]);
-
-  // Page changes
-  useEffect(() => {
-    if (!userId || !loaded) return;
-    fetchAlerts();
-  }, [page, fetchAlerts, loaded, userId]);
+  // Row keyboard handler (Enter/Space to open)
+  const onRowKey = (e: React.KeyboardEvent<HTMLTableRowElement>, a: AlertItem) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openDetail(a);
+    }
+  };
 
   return (
-    <div className="p-6">
-      <div className="mb-4 flex flex-col gap-3">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h1 className="text-xl font-semibold text-gray-800">{t('alertsPage.title')}</h1>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold">
+          {t('alertsPage.title', 'Your alerts')}
+        </h1>
 
-          {/* Filters */}
-          <div className="flex items-center gap-3">
-            <label htmlFor="status" className="text-sm text-gray-600">{t('alertsPage.filter.status')}</label>
-            <select
-              id="status"
-              className="border rounded-md p-2 text-sm"
-              value={status}
-              onChange={(e) => setStatus(e.target.value as Status)}
-            >
-              <option value="active">{t('alertsPage.filter.statusActive')}</option>
-              <option value="unread">{t('alertsPage.filter.statusUnread')}</option>
-              <option value="all">{t('alertsPage.filter.statusAll')}</option>
-            </select>
-
-            <label htmlFor="severity" className="text-sm text-gray-600">{t('alertsPage.filter.label')}</label>
-            <select
-              id="severity"
-              className="border rounded-md p-2 text-sm"
-              value={severity}
-              onChange={(e) => setSeverity(e.target.value as Severity)}
-            >
-              <option value="all">{t('alertsPage.filter.all')}</option>
-              <option value="info">{t('severity.info')}</option>
-              <option value="warning">{t('severity.warning')}</option>
-              <option value="critical">{t('severity.critical')}</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Bulk actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            className="px-3 py-2 rounded-lg text-sm bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50"
+            type="button"
             onClick={markAllRead}
-            disabled={loading || data.items.length === 0}
+            className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition"
           >
-            {t('alertsPage.actions.markAllRead')}
+            {t('alertsPage.actions.markAllRead', 'Mark all as read')}
           </button>
           <button
-            className="px-3 py-2 rounded-lg text-sm bg-gray-800 text-white hover:bg-gray-900 transition disabled:opacity-50"
-            onClick={archiveAllRead}
-            disabled={loading || data.items.length === 0}
+            type="button"
+            onClick={archiveAll}
+            className="px-3 py-2 rounded-md text-sm font-medium border hover:bg-gray-50 transition"
           >
-            {t('alertsPage.actions.archiveAllRead')}
+            {t('alertsPage.actions.archiveAll', 'Archive all')}
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow border border-gray-100 overflow-hidden">
-        <div className="grid grid-cols-12 px-4 py-2 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-700">
-          <div className="col-span-4">{t('alertsPage.table.title')}</div>
-          <div className="col-span-2">{t('alertsPage.table.severity')}</div>
-          <div className="col-span-4">{t('alertsPage.table.body')}</div>
-          <div className="col-span-1">{t('alertsPage.table.createdAt')}</div>
-          <div className="col-span-1 text-center">{t('alertsPage.table.status')}</div>
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-3">
+        {/* Status */}
+        <div className="flex items-center gap-2">
+          <label className="text-sm">{t('alertsPage.filters.status', 'Status')}:</label>
+          <select
+            className="rounded-md border px-2 py-1 text-sm"
+            value={status}
+            onChange={(e) => setStatus(e.target.value as 'all' | 'unread')}
+          >
+            <option value="all">{t('alertsPage.filters.all', 'All')}</option>
+            <option value="unread">{t('alertsPage.filters.unread', 'Unread')}</option>
+          </select>
         </div>
 
-        {loading ? (
-          <div className="flex items-center gap-2 px-4 py-8 text-gray-600">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>{t('alerts.loading')}</span>
-          </div>
-        ) : data.items.length === 0 ? (
-          <div className="px-4 py-8 text-gray-500 text-sm">{t('alerts.noAlerts')}</div>
-        ) : (
-          <ul className="divide-y">
-            {data.items.map((it, idx) => {
-              const key = (it.id ?? '') !== '' ? String(it.id) : `row-${idx}-${it.createdAt}`;
-              return (
-                <li
-                  key={key}
-                  className="grid grid-cols-12 px-4 py-3 hover:bg-gray-50 cursor-pointer"
-                  onClick={() => {
-                    // open detail modal
-                    setSelected(it);
-                    setDetailOpen(true);
-                  }}
-                >
-                  <div className="col-span-4 truncate">
-                    <div className="text-gray-900 text-[15px] font-medium truncate">{it.title}</div>
-                  </div>
-                  <div className="col-span-2">
-                    <span
-                      className="inline-block px-2 py-0.5 text-xs border rounded"
-                      style={severityPillStyle(it.colorHex)}
-                    >
-                      {t(`severity.${it.severity}`)}
-                    </span>
-                  </div>
-                  <div className="col-span-4 text-sm text-gray-700 truncate">{clip(it.body, 160)}</div>
-                  <div className="col-span-1 text-sm text-gray-700">{formatDate(it.createdAt)}</div>
-                  <div className="col-span-1 text-center">
-                    {it.read ? (
-                      <span className="text-xs text-gray-500">{t('alertsPage.status.read')}</span>
-                    ) : (
-                      <span className="text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded px-1.5 py-0.5">
-                        {t('alerts.new')}
-                      </span>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        {/* Severity */}
+        <div className="flex items-center gap-2">
+          <label className="text-sm">{t('alertsPage.filters.severity', 'Severity')}:</label>
+          <select
+            className="rounded-md border px-2 py-1 text-sm"
+            value={severity}
+            onChange={(e) => setSeverity(e.target.value as 'all' | Severity)}
+          >
+            <option value="all">{t('alertsPage.filters.all', 'All')}</option>
+            <option value="info">{t('alertsPage.filters.info', 'Info')}</option>
+            <option value="warning">{t('alertsPage.filters.warning', 'Warning')}</option>
+            <option value="critical">{t('alertsPage.filters.critical', 'Critical')}</option>
+          </select>
+        </div>
 
-        <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between text-sm">
-          <div className="text-gray-600">
-            {t('alertsPage.pager.summary', {
-              from: data.total === 0 ? 0 : (data.page - 1) * data.pageSize + 1,
-              to: Math.min(data.page * data.pageSize, data.total),
-              total: data.total,
-            })}
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              className="px-3 py-1 border rounded disabled:opacity-50"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={data.page <= 1 || loading}
-            >
-              {t('alertsPage.pager.prev')}
-            </button>
-            <span className="px-2">
-              {t('alertsPage.pager.pageOf', { page: data.page, totalPages: Math.max(1, Math.ceil(data.total / data.pageSize)) })}
-            </span>
-            <button
-              className="px-3 py-1 border rounded disabled:opacity-50"
-              onClick={() => setPage((p) => Math.min(Math.max(1, Math.ceil(data.total / data.pageSize)), p + 1))}
-              disabled={data.page >= Math.max(1, Math.ceil(data.total / data.pageSize)) || loading}
-            >
-              {t('alertsPage.pager.next')}
-            </button>
-          </div>
+        {/* Page size */}
+        <div className="flex items-center gap-2">
+          <label className="text-sm">{t('alertsPage.filters.pageSize', 'Page size')}:</label>
+          <select
+            className="rounded-md border px-2 py-1 text-sm"
+            value={pageSize}
+            onChange={(e) => setPageSize(parseInt(e.target.value, 10))}
+          >
+            {[10, 20, 50].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
+      {/* Table (real cells per column to preserve alignment) */}
+      <div className="overflow-hidden rounded-md border">
+        <table className="min-w-full divide-y">
+          <thead className="bg-gray-50">
+            <tr className="text-left text-sm font-medium text-gray-700">
+              <th className="px-4 py-3 w-[28%]">{t('alertsPage.table.title', 'Title')}</th>
+              <th className="px-4 py-3 w-[36%]">{t('alertsPage.table.body', 'Body')}</th>
+              <th className="px-4 py-3 w-[12%]">{t('alertsPage.table.severity', 'Severity')}</th>
+              <th className="px-4 py-3 w-[16%]">{t('alertsPage.table.created', 'Created')}</th>
+              <th className="px-4 py-3 w-[8%]">{t('alertsPage.table.status', 'Status')}</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {loading ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-sm">
+                  {t('alertsPage.loading', 'Loading…')}
+                </td>
+              </tr>
+            ) : data.items.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-sm">
+                  {t('alertsPage.empty', 'No alerts found')}
+                </td>
+              </tr>
+            ) : (
+              data.items.map((a) => (
+                <tr
+                  key={a.id}
+                  className="text-sm hover:bg-gray-50 cursor-pointer"
+                  onClick={() => openDetail(a)}
+                  tabIndex={0}
+                  role="button"
+                  onKeyDown={(e) => onRowKey(e, a)}
+                  aria-label={t('alertsPage.actions.viewAlert', 'View alert')}
+                >
+                  {/* Title */}
+                  <td className="px-4 py-3 align-middle">
+                    <div className="flex items-center gap-2 min-w-0">
+                      {!a.read && <span className="inline-block h-2 w-2 rounded-full bg-blue-600" />}
+                      <span className="truncate font-medium" title={a.title}>
+                        {a.title}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Body (visible, truncated to one line; tooltip shows full text) */}
+                  <td className="px-4 py-3 align-middle">
+                    <div className="min-w-0 truncate text-gray-700" title={a.body || ''}>
+                      {a.body || '—'}
+                    </div>
+                  </td>
+
+                  {/* Severity */}
+                  <td className="px-4 py-3 align-middle">
+                    <span
+                      className={
+                        a.severity === 'critical'
+                          ? 'inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800'
+                          : a.severity === 'warning'
+                          ? 'inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800'
+                          : 'inline-flex items-center rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-800'
+                      }
+                    >
+                      {a.severity}
+                    </span>
+                  </td>
+
+                  {/* Created */}
+                  <td className="px-4 py-3 align-middle text-gray-600">
+                    <time dateTime={a.createdAt} title={new Date(a.createdAt).toLocaleString()}>
+                      {new Date(a.createdAt).toLocaleString()}
+                    </time>
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-4 py-3 align-middle">
+                    {a.read
+                      ? t('alertsPage.row.read', 'Read')
+                      : t('alertsPage.row.unread', 'Unread')}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pager */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-600" aria-live="polite">
+          {t('alertsPage.pager.summary', {
+            from: data.total === 0 ? 0 : (data.page - 1) * data.pageSize + 1,
+            to: Math.min(data.page * data.pageSize, data.total),
+            total: data.total,
+          })}
+        </p>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1 || loading}
+          >
+            {t('alertsPage.pager.prev', 'Prev')}
+          </button>
+          <span className="text-sm">
+            {t('alertsPage.pager.pageXofY', {
+              x: page,
+              y: Math.max(1, Math.ceil(data.total / pageSize)),
+            })}
+          </span>
+          <button
+            type="button"
+            className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
+            onClick={() =>
+              setPage((p) =>
+                Math.min(Math.ceil(Math.max(1, data.total) / pageSize), p + 1)
+              )
+            }
+            disabled={page >= Math.ceil(Math.max(1, data.total) / pageSize) || loading}
+          >
+            {t('alertsPage.pager.next', 'Next')}
+          </button>
+        </div>
+      </div>
+
+      {/* Detail modal */}
       <AlertDetailModal
-        open={detailOpen}
+        isOpen={detailOpen}
         alert={selected}
-        onOpenChange={setDetailOpen}
-        onMarkedRead={handleMarkedRead}
+        onClose={() => setDetailOpen(false)}
+        onMarkedRead={onMarkedRead}
       />
     </div>
   );

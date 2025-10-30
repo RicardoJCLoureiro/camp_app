@@ -1,57 +1,35 @@
 'use client';
 
 import * as React from 'react';
-import { Fragment, useCallback, useMemo, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import Image from 'next/image';
-import { Loader2, X } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  DialogDescription,
+  Transition,
+  TransitionChild,
+} from '@headlessui/react';
 import { toast } from 'react-toastify';
-
+import { useTranslation } from 'react-i18next';
 import { useApi } from '@/utils/api';
-import verificarImg from '@/images/logo_new.png';
+import type { AlertItem } from '../alerts/page';
 
-type Severity = 'info' | 'warning' | 'critical';
-
-type AlertItem = {
-  id: number | string;
-  title: string;
-  createdAt: string;
-  severity: Severity;
-  read?: boolean;
-  body?: string | null;
-};
-
-export interface AlertDetailModalProps {
-  open: boolean;
+interface Props {
+  isOpen: boolean;
   alert: AlertItem | null;
-  onOpenChange: (open: boolean) => void;
-  onMarkedRead?: (id: number | string) => void;
-}
-
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString();
+  onClose: () => void;
+  onMarkedRead?: (id: string | number) => void;
 }
 
 export default function AlertDetailModal({
-  open,
+  isOpen,
   alert,
-  onOpenChange,
+  onClose,
   onMarkedRead,
-}: AlertDetailModalProps) {
+}: Props) {
   const { t } = useTranslation('common');
   const api = useApi();
-
-  const [marking, setMarking] = useState(false);
-
-  const close = useCallback(() => onOpenChange(false), [onOpenChange]);
-
-  const bodyTone =
-    alert?.severity === 'critical' ? 'ring-1 ring-red-100'
-      : alert?.severity === 'warning' ? 'ring-1 ring-amber-100'
-      : 'ring-1 ring-blue-100';
+  const [marking, setMarking] = React.useState(false);
 
   const onCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!alert) return;
@@ -70,110 +48,95 @@ export default function AlertDetailModal({
     }
   };
 
+  const severityPill =
+    alert?.severity === 'critical'
+      ? 'inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800'
+      : alert?.severity === 'warning'
+      ? 'inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800'
+      : 'inline-flex items-center rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-800';
+
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={close}>
-        <Transition.Child
-          as={Fragment}
-          enter="transition-opacity ease-out duration-150"
+    <Transition appear show={isOpen} as={React.Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        {/* Overlay */}
+        <TransitionChild
+          as={React.Fragment}
+          enter="ease-out duration-200"
           enterFrom="opacity-0"
           enterTo="opacity-100"
-          leave="transition-opacity ease-in duration-100"
+          leave="ease-in duration-150"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/40" />
-        </Transition.Child>
+          <div className="fixed inset-0 bg-black/20" />
+        </TransitionChild>
 
+        {/* Panel */}
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-end sm:items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="transition-all ease-out duration-200"
-              enterFrom="opacity-0 translate-y-2 sm:translate-y-0 sm:scale-95"
+          <div className="flex min-h-full items-center justify-center p-4">
+            <TransitionChild
+              as={React.Fragment}
+              enter="ease-out duration-200"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="transition-all ease-in duration-150"
+              leave="ease-in duration-150"
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-2 sm:translate-y-0 sm:scale-95"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="w-full max-w-2xl sm:max-w-3xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-2xl">
-                <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200">
-                  <div className="flex items-center gap-3">
-                    <Image src={verificarImg} alt="Logo" width={36} height={36} className="rounded-full shadow" />
+              <DialogPanel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left shadow-xl transition-all">
+                <DialogTitle className="text-lg font-semibold">
+                  {alert?.title ?? t('alertModal.title', 'Alert')}
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                  {alert?.createdAt ?? ''}
+                </DialogDescription>
+
+                <div className="mt-4 space-y-3 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className={severityPill}>{alert?.severity}</span>
+                    {alert?.createdAt && (
+                      <time
+                        className="text-gray-500"
+                        dateTime={alert?.createdAt}
+                        title={new Date(alert.createdAt).toLocaleString()}
+                      >
+                        {new Date(alert.createdAt).toLocaleString()}
+                      </time>
+                    )}
                   </div>
-                  <div className="flex-1 text-center">
-                    <Dialog.Title className="text-2xl font-semibold text-[var(--color-text_dark)]">
-                      {t('alertModal.title')}
-                    </Dialog.Title>
-                    <Dialog.Description className="mt-1 text-xs text-gray-500">
-                      {alert?.createdAt ? formatDate(alert.createdAt) : ''}
-                    </Dialog.Description>
-                  </div>
+
+                  {alert?.body && (
+                    <p className="whitespace-pre-wrap text-gray-800">{alert.body}</p>
+                  )}
+
+                  <label className="inline-flex items-center gap-2 select-none">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300"
+                      defaultChecked={!!alert?.read}
+                      onChange={onCheckboxChange}
+                      disabled={marking || !!alert?.read}
+                    />
+                    <span>
+                      {t('alertModal.markRead', 'Mark as read')}
+                    </span>
+                  </label>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-2">
                   <button
                     type="button"
-                    onClick={close}
-                    className="p-1.5 rounded hover:bg-gray-100 transition"
-                    aria-label={t('alertModal.close')}
+                    onClick={onClose}
+                    className="rounded-md border px-3 py-1.5 text-sm hover:bg-gray-50"
                   >
-                    <X className="w-5 h-5 text-gray-500" />
+                    {t('common.close', 'Close')}
                   </button>
                 </div>
-
-                <div className={`px-8 py-6 ${alert ? bodyTone : ''}`}>
-                  {!alert ? (
-                    <div className="py-6 text-sm text-gray-500">
-                      {t('alertsPage.detail.noData')}
-                    </div>
-                  ) : (
-                    <div className="space-y-5">
-                      <div>
-                        <div className="text-[15px] font-semibold text-gray-900">
-                          {alert.title}
-                        </div>
-                        <div className="mt-3 whitespace-pre-wrap text-sm text-gray-800">
-                          {alert.body ?? t('alertsPage.detail.noContent')}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 pt-2">
-                        <input
-                          id="markRead"
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-[var(--color-flag_green)] focus:ring-2 focus:ring-[var(--color-flag_green)] disabled:opacity-60"
-                          checked={!!alert.read}
-                          disabled={alert.read || marking}
-                          onChange={onCheckboxChange}
-                        />
-                        <label
-                          htmlFor="markRead"
-                          className={`text-sm ${alert.read ? 'text-gray-500' : 'text-gray-800'}`}
-                        >
-                          {t('alertModal.markRead')}
-                        </label>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="px-8 py-4 bg-[var(--color-text_dark)] flex items-center justify-between">
-                  <div className="text-[var(--color-flag_white)] text-sm">
-                    {t('footer.developedWithLove')}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={close}
-                      className="inline-flex items-center rounded-lg bg-white/10 px-3 py-1.5 text-sm font-medium text-[var(--color-flag_white)] hover:bg-white/20 transition"
-                    >
-                      {t('alertModal.close')}
-                    </button>
-                  </div>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
