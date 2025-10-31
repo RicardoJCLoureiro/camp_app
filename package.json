@@ -1,6 +1,6 @@
 {
-  "name": "ai1",
-  "version": "0.1.0",
+  "name": "mira",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "node https-dev.js",

@@ -5,7 +5,7 @@
     "usernamePlaceholder": "Entrez votre nom d'utilisateur",
     "passwordLabel": "Mot de passe",
     "passwordPlaceholder": "Entrez votre mot de passe",
-    "submit": "Se connecter",
+    "submit": "Connexion",
     "loading": "Connexion en cours…",
     "success": "Connexion réussie !",
     "failure": "Échec de la connexion. Veuillez réessayer.",
@@ -15,7 +15,7 @@
     "missingEmail": "Veuillez entrer votre e-mail.",
     "forgotPassword": "Mot de passe oublié ?",
     "enterMfaCode": "Entrez le code d'authentification de votre application",
-    "mfaCodeLabel": "Code de l'authentificateur",
+    "mfaCodeLabel": "Code d'authentification",
     "mfaCodePlaceholder": "123456",
     "verifyMfa": "Vérifier le code",
     "backToCredentials": "Retour à la connexion",
@@ -40,10 +40,10 @@
     "newPasswordPlaceholder": "Entrez votre nouveau mot de passe",
     "confirmPasswordLabel": "Confirmer le mot de passe",
     "confirmPasswordPlaceholder": "Retapez votre nouveau mot de passe",
-    "mfaCodeLabel": "Code de l'authentificateur",
+    "mfaCodeLabel": "Code d'authentification",
     "mfaCodePlaceholder": "123456",
     "complexityLabel": "Force du mot de passe",
-    "loadingButton": "Réinitialisation…",
+    "loadingButton": "Réinitialisation en cours…",
     "resetButton": "Réinitialiser le mot de passe",
     "missingFields": "Veuillez remplir tous les champs.",
     "passwordMismatch": "Les mots de passe ne correspondent pas.",
@@ -60,9 +60,9 @@
     "body": "Votre session expirera bientôt. Souhaitez-vous la prolonger ?",
     "timeRemaining": "Temps restant",
     "extendSession": "Prolonger la session",
-    "logout": "Se déconnecter",
+    "logout": "Déconnexion",
     "inactivityHeader": "Êtes-vous toujours là ?",
-    "redirectMessage": "Vous avez été inactif et vous serez bientôt déconnecté.",
+    "redirectMessage": "Vous avez été inactif et serez bientôt déconnecté.",
     "stay": "Rester connecté",
     "expiredToast": "Votre session a expiré. Veuillez vous reconnecter.",
     "inactivityToast": "Vous avez été déconnecté en raison de l'inactivité."
@@ -86,7 +86,7 @@
   "newEntity": "Créer une nouvelle entité",
   "createEntity": "Créer une nouvelle entité",
   "entityName": "Nom de l'entité",
-  "entityNamePlaceholder": "par ex., Liga Portuguesa de Futebol",
+  "entityNamePlaceholder": "ex: Liga Portuguesa de Futebol",
   "createdBy": "Créé par",
   "createdAt": "Créé le",
   "actions": "Actions",
@@ -104,7 +104,7 @@
     "step2": "Détails",
     "step3": "Admin",
     "step4": "Permissions",
-    "stepIncomplete": "Veuillez remplir les champs requis",
+    "stepIncomplete": "Veuillez remplir les champs obligatoires",
     "finished": "Assistant terminé (pas encore d'appel API)",
     "uploadOk": "Image téléchargée."
   },
@@ -130,7 +130,7 @@
     "confirm": "Confirmer le mot de passe"
   },
   "permissions": {
-    "placeholder": "L'interface d'attribution de rôles/permissions arrive ensuite 🙂"
+    "placeholder": "L'interface utilisateur d'attribution de rôle/permission arrive ensuite 🙂"
   },
   "previous": "Précédent",
   "next": "Suivant",
@@ -160,159 +160,297 @@
   "gender": "Genre",
   "identityNumber": "Numéro d'identité",
   "bloodType": "Groupe sanguin",
-  "addressLine1": "Adresse Ligne 1",
-  "addressLine2": "Adresse Ligne 2",
+  "addressLine1": "Adresse ligne 1",
+  "addressLine2": "Adresse ligne 2",
   "stateProvince": "État / Province",
   "postalCode": "Code postal",
   "country": "Pays",
   "emergencyContactName": "Nom du contact d'urgence",
   "emergencyContactPhone": "Téléphone du contact d'urgence",
-    "emergencyContactRelationship": "Relation du contact d'urgence",
-    "allergies": "Allergies",
-    "medicalConditions": "Conditions médicales",
-    "languages": {
-        "en": "Anglais",
-        "es": "Espagnol",
-        "pt": "Portugais",
-        "fr": "Français",
-        "zh": "Chinois"
-    },
-    "alt": {
-        "logo": "Logo",
-        "ball": "Ballon",
-        "redCard": "Carton rouge",
-        "whistle": "Sifflet",
-        "player": "Joueur"
-    },
-    "footer": {
-        "developedWithLove": "Développé et conçu avec ❤️ par"
-    },
-    "sessionRefreshed": "Session prolongée avec succès.",
-    "dashboard": {
-        "title": "Tableau de bord",
-        "openMenu": "Ouvrir le menu",
-        "closeMenu": "Fermer le menu",
-        "avatarAlt": "Avatar de l'utilisateur",
-        "refresh": "Actualiser",
-        "logout": "Se déconnecter",
-        "menu": {
-            "users": "Utilisateurs",
-            "user-details": "Détails de l'utilisateur",
-            "change-password": "Changer le mot de passe"
-        }
-    },
-    "users": {
-        "details": {
-            "title": "Votre profil",
-            "loadError": "Impossible de charger vos détails.",
-            "saved": "Profil mis à jour.",
-            "saveError": "Impossible d'enregistrer les modifications.",
-            "noChanges": "Aucune modification à enregistrer.",
-            "uploadAvatar": "Télécharger un nouvel avatar",
-            "uploading": "Téléchargement…",
-            "removeAvatar": "Supprimer",
-            "avatarUploaded": "Avatar téléchargé.",
-            "avatarUploadError": "Impossible de télécharger l'avatar.",
-            "languageHint": "Changer la langue nécessitera un rechargement après l'enregistrement.",
-            "reloadForLanguage": "Langue changée. Recharger maintenant pour appliquer ?"
-        },
-        "fields": {
-            "name": "Nom",
-            "surname": "Nom de famille",
-            "languagePreference": "Langue",
-            "profilePictureUrl": "URL de la photo de profil",
-            "phoneNumber": "Numéro de téléphone",
-            "addressLine1": "Adresse ligne 1",
-            "addressLine2": "Adresse ligne 2",
-            "city": "Ville",
-            "stateProvince": "État/Province",
-            "postalCode": "Code postal",
-            "country": "Pays",
-            "emergencyContactName": "Nom du contact d'urgence",
-            "emergencyContactPhone": "Téléphone du contact d'urgence",
-            "emergencyContactRelationship": "Relation du contact d'urgence",
-            "allergies": "Allergies",
-            "medicalConditions": "Conditions médicales"
-        },
-        "password": {
-            "title": "Changer le mot de passe",
-            "current": "Mot de passe actuel",
-            "new": "Nouveau mot de passe",
-            "confirm": "Confirmer le nouveau mot de passe",
-            "submit": "Mettre à jour le mot de passe",
-            "mismatch": "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
-            "changed": "Mot de passe changé avec succès.",
-            "invalidCurrent": "Votre mot de passe actuel est incorrect.",
-            "error": "Impossible de changer le mot de passe.",
-            "instructions": "Utilisez au moins 8 caractères avec des lettres et des chiffres, au moins 1 lettre majuscule et au moins 1 symbole (par ex., @). Score de force minimum requis : 7/10.",
-            "strength": "Force : {{score}} / 10",
-            "tooWeak": "Le mot de passe est trop faible. Veuillez le renforcer (≥ 7/10)."
-        }
-    },
-    "common": {
-        "save": "Enregistrer",
-        "saving": "Enregistrement…",
-        "reset": "Réinitialiser"
-    },
-    "dummy": {
-        "authRequired": "Vous devez être connecté pour accéder au tableau de bord.",
-        "header": {
-            "title": "Aperçu",
-            "subtitle": "Ceci est un exemple de tableau de bord avec des données fictives."
-        },
-        "actions": {
-            "export": "Exporter",
-            "viewDetails": "Voir les détails"
-        },
-        "stats": {
-            "costs": {
-                "title": "Coûts",
-                "sublabel": "vs le mois dernier",
-                "delta": "−4.3%"
-            },
-            "revenue": {
-                "title": "Revenus",
-                "sublabel": "vs le mois dernier",
-                "delta": "+8.9%"
-            },
-            "issues": {
-                "title": "Problèmes ouverts",
-                "value": "12",
-                "sublabel": "triés",
-                "delta": "−2 depuis hier"
-            },
-            "aiInvoices": {
-                "title": "Factures traitées par IA",
-                "sublabel": "les 30 derniers jours",
-                "delta": "+11%"
-            },
-            "tickets": {
-                "title": "Billets résolus",
-                "sublabel": "cette semaine",
-                "delta": "+6%"
-            },
-            "housesAI": {
-                "title": "Maisons étiquetées par IA",
-                "sublabel": "ce mois-ci",
-                "delta": "+14%"
-            }
-        },
-        "chart": {
-            "title": "Revenus mensuels",
-            "subtitle": "12 derniers mois",
-            "legend": "Revenus"
-        },
-        "whatsNew": {
-            "title": "Nouveautés",
-            "item1": { "title": "Journal d'audit", "body": "Nous avons ajouté plus de détails à chaque modification." },
-            "item2": { "title": "Rapports plus rapides", "body": "Le traitement en arrière-plan s'est amélioré de 30%." },
-            "item3": { "title": "Nouvelles intégrations", "body": "Connectez-vous avec plus d'outils tiers." }
-        },
-        "quickActions": {
-            "title": "Actions rapides",
-            "openIssues": "Problèmes ouverts",
-            "monthlyReport": "Rapport mensuel",
-            "helper": "Raccourcis vers les actions courantes."
-        }
+  "emergencyContactRelationship": "Relation du contact d'urgence",
+  "allergies": "Allergies",
+  "medicalConditions": "Conditions médicales",
+  "languages": {
+    "en": "Anglais",
+    "es": "Espagnol",
+    "pt": "Portugais",
+    "fr": "Français",
+    "zh": "Chinois"
+  },
+  "alt": {
+    "logo": "Logo",
+    "ball": "Ballon",
+    "redCard": "Carton rouge",
+    "whistle": "Sifflet",
+    "player": "Joueur"
+  },
+  "footer": {
+    "developedWithLove": "Développé et conçu avec ❤️ par"
+  },
+  "sessionRefreshed": "Session prolongée avec succès.",
+  "dashboard": {
+    "title": "Tableau de bord",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "avatarAlt": "Avatar de l'utilisateur",
+    "refresh": "Actualiser",
+    "logout": "Déconnexion",
+    "menu": {
+      "users": "Utilisateurs",
+      "session": "Session",
+      "overview": "Aperçu",
+      "user-details": "Détails de l'utilisateur",
+      "alerts": "Alertes",
+      "change-password": "Changer le mot de passe",
+      "log-out": "Déconnexion"
     }
+  },
+  "users": {
+    "details": {
+      "title": "Détails de l'utilisateur",
+      "loadError": "Impossible de charger les détails de l'utilisateur.",
+      "saved": "Profil enregistré.",
+      "saveError": "Échec de l'enregistrement du profil.",
+      "noChanges": "Aucune modification à enregistrer.",
+      "uploadAvatar": "Télécharger un avatar",
+      "uploading": "Téléchargement…",
+      "removeAvatar": "Supprimer l'avatar",
+      "avatarUploaded": "Avatar téléchargé !",
+      "avatarUploadError": "Échec du téléchargement de l'avatar.",
+      "languageHint": "Le changement de langue entraînera un rechargement.",
+      "reloadForLanguage": "Langue changée. Recharger maintenant ?",
+      "emailLocked": "L'e-mail est géré par le système",
+      "countryPlaceholder": "Portugal"
+    },
+    "fields": {
+      "name": "Prénom",
+      "surname": "Nom de famille",
+      "email": "E-mail",
+      "languagePreference": "Langue",
+      "gender": "Genre",
+      "birthDate": "Date de naissance",
+      "profilePictureUrl": "URL de l'image de profil",
+      "phoneNumber": "Téléphone",
+      "addressLine1": "Adresse ligne 1",
+      "addressLine2": "Adresse ligne 2",
+      "city": "Ville",
+      "stateProvince": "État/Province",
+      "postalCode": "Code postal",
+      "country": "Pays",
+      "emergencyContactName": "Nom du contact d'urgence",
+      "emergencyContactPhone": "Téléphone du contact d'urgence",
+      "emergencyContactRelationship": "Relation d'urgence",
+      "allergies": "Allergies",
+      "medicalConditions": "Conditions médicales"
+    },
+    "password": {
+      "title": "Changer le mot de passe",
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "confirm": "Confirmer le nouveau mot de passe",
+      "submit": "Mettre à jour le mot de passe",
+      "mismatch": "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
+      "changed": "Mot de passe changé avec succès.",
+      "invalidCurrent": "Votre mot de passe actuel est incorrect.",
+      "error": "Impossible de changer le mot de passe.",
+      "instructions": "Utilisez au moins 8 caractères avec des lettres et des chiffres, au moins 1 lettre majuscule et au moins 1 symbole (par exemple, @). Score de force minimum requis : 7/10.",
+      "strength": "Force : {{score}} / 10",
+      "tooWeak": "Le mot de passe est trop faible. Veuillez le renforcer (≥ 7/10)."
+    },
+    "validation": {
+      "emailInvalid": "Veuillez entrer une adresse e-mail valide.",
+      "phoneInvalid": "Veuillez entrer un numéro de téléphone valide.",
+      "emergencyPhoneInvalid": "Veuillez entrer un numéro de téléphone d'urgence valide.",
+      "postalInvalid": "Veuillez entrer un code postal valide."
+    }
+  },
+  "common": {
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "reset": "Réinitialiser",
+    "close": "Fermer"
+  },
+  "dummy": {
+    "authRequired": "Vous devez être connecté pour accéder au tableau de bord.",
+    "header": {
+      "title": "Aperçu",
+      "subtitle": "Ceci est un exemple de tableau de bord avec des données fictives."
+    },
+    "actions": {
+      "export": "Exporter",
+      "viewDetails": "Voir les détails"
+    },
+    "stats": {
+      "costs": {
+        "title": "Coûts",
+        "sublabel": "vs le mois dernier",
+        "delta": "−4.3%"
+      },
+      "revenue": {
+        "title": "Revenus",
+        "sublabel": "vs le mois dernier",
+        "delta": "+8.9%"
+      },
+      "issues": {
+        "title": "Problèmes ouverts",
+        "value": "12",
+        "sublabel": "triés",
+        "delta": "−2 depuis hier"
+      },
+      "aiInvoices": {
+        "title": "Factures traitées par IA",
+        "sublabel": "les 30 derniers jours",
+        "delta": "+11%"
+      },
+      "tickets": {
+        "title": "Billets résolus",
+        "sublabel": "cette semaine",
+        "delta": "+6%"
+      },
+      "housesAI": {
+        "title": "Maisons étiquetées par IA",
+        "sublabel": "ce mois-ci",
+        "delta": "+14%"
+      }
+    },
+    "chart": {
+      "title": "Revenus mensuels",
+      "subtitle": "Les 12 derniers mois",
+      "legend": "Revenus"
+    },
+    "whatsNew": {
+      "title": "Quoi de neuf",
+      "item1": { "title": "Journal d'audit", "body": "Nous avons ajouté plus de détails à chaque modification." },
+      "item2": { "title": "Rapports plus rapides", "body": "Le traitement en arrière-plan s'est amélioré de 30%." },
+      "item3": { "title": "Nouvelles intégrations", "body": "Connectez-vous avec plus d'outils tiers." }
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "openIssues": "Problèmes ouverts",
+      "monthlyReport": "Rapport mensuel",
+      "helper": "Raccourcis vers les actions couramment utilisées."
+    }
+  },
+  "alerts": {
+    "title": "Alertes",
+    "refresh": "Actualiser",
+    "noAlerts": "Aucune alerte",
+    "viewAll": "Voir tout",
+    "loading": "Chargement…",
+    "ago": "il y a",
+    "new": "NOUVEAU",
+    "toast": {
+      "critical": "Alerte critique : {{title}}",
+      "warning": "Avertissement : {{title}}",
+      "info": "Info : {{title}}",
+      "more": "{{count}} autre{{pluralSuffix}} nouvelle alerte{{pluralSuffix}}…"
+    }
+  },
+  "severity": {
+    "info": "Information",
+    "warning": "Avertissement",
+    "critical": "Critique"
+  },
+  "alertsPage": {
+    "title": "Vos alertes",
+    "loading": "Chargement…",
+    "empty": "Aucune alerte trouvée",
+    "filter": {
+      "label": "Gravité",
+      "all": "Toutes les gravités",
+      "status": "Statut",
+      "statusActive": "Actif",
+      "statusArchived": "Archivé",
+      "statusAll": "Tous",
+      "statusUnread": "Non lu"
+    },
+    "actions": {
+      "markAllRead": "Marquer tout comme lu",
+      "archiveAllRead": "Archiver tous les lus",
+      "archiveAll": "Archiver tout",
+      "viewAlert": "Voir l'alerte"
+    },
+    "filters": {
+      "view": "Vue",
+      "all": "Tous",
+      "unread": "Non lus",
+      "read": "Lus",
+      "archived": "Archivés",
+      "severity": "Gravité",
+      "pageSize": "Taille de la page"
+    },
+    "table": {
+      "title": "Titre",
+      "severity": "Gravité",
+      "body": "Corps",
+      "createdAt": "Créé le",
+      "status": "Statut",
+      "created": "Créé"
+    },
+    "status": {
+      "read": "Lu"
+    },
+    "row": {
+      "expires": "Expire",
+      "readAt": "Lu le",
+      "archivedAt": "Archivé le",
+      "archived": "Archivé",
+      "read": "Lu",
+      "unread": "Non lu"
+    },
+    "pager": {
+      "summary": "{{from}}–{{to}} sur {{total}}",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "pageOf": "Page {{page}} sur {{totalPages}}",
+      "pageXofY": "Page {{x}} sur {{y}}"
+    },
+    "toast": {
+      "detailError": "Impossible de charger les détails de l'alerte.",
+      "markedRead": "Marqué comme lu.",
+      "markReadError": "Échec de la marque comme lu.",
+      "unexpectedShape": "Forme de réponse inattendue.",
+      "fetchError": "Échec du chargement des alertes",
+      "markAllReadOk": "Tout marqué comme lu",
+      "markAllReadError": "Impossible de marquer tout comme lu",
+      "archiveAllOk": "Alertes lues archivées",
+      "archiveAllError": "Impossible d'archiver les alertes lues",
+      "markedAllRead": "Toutes les alertes visibles marquées comme lues",
+      "archivedAll": "Toutes les alertes archivées"
+    },
+    "detail": {
+      "noData": "Aucune donnée disponible.",
+      "noContent": "Aucun contenu additionnel."
+    }
+  },
+  "alertModal": {
+    "title": "Détails de l'alerte",
+    "markRead": "Marquer comme lu",
+    "openInAlerts": "Ouvrir dans les alertes",
+    "close": "Fermer",
+    "fetchError": "Échec du chargement des détails de l'alerte",
+    "noBody": "Aucun détail",
+    "readAt": "Lu le",
+    "archivedAt": "Archivé le",
+    "expiresAt": "Expire le",
+    "markUnread": "Marquer comme non lu",
+    "archive": "Archiver",
+    "unarchive": "Désarchiver",
+    "markedUnread": "Marqué comme non lu",
+    "markUnreadError": "Échec de la marque comme non lu",
+    "archived": "Archivé",
+    "archiveError": "Échec de l'archivage",
+    "unarchived": "Désarchivé",
+    "unarchiveError": "Échec du désarchivage"
+  },
+  "alertsBell": {
+    "title": "Alertes",
+    "newAlert": "Nouvelle alerte !",
+    "header": "Notifications",
+    "viewAll": "Voir tout",
+    "empty": "Aucune alerte récente",
+    "ago": "il y a",
+    "open": "Ouvrir les détails",
+    "footer": "Mises à jour automatiques"
+  }
 }

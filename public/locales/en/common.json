@@ -195,43 +195,58 @@
     "avatarAlt": "User avatar",
     "refresh": "Refresh",
     "logout": "Log Out",
+    "greeting": {
+      "hello": "Hello!",
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}",
+      "night": "Good night, {{name}}"
+    },
     "menu": {
       "users": "Users",
+      "session": "Session",
       "overview": "Overview",
       "user-details": "User details",
-      "change-password": "Change password"
+      "alerts": "Alerts",
+      "change-password": "Change password",
+      "log-out": "Log Out"
     }
   },
   "users": {
     "details": {
-      "title": "Your profile",
-      "loadError": "Could not load your details.",
-      "saved": "Profile updated.",
-      "saveError": "Could not save changes.",
+      "title": "User details",
+      "loadError": "Failed to load user details.",
+      "saved": "Profile saved.",
+      "saveError": "Failed to save profile.",
       "noChanges": "No changes to save.",
-      "uploadAvatar": "Upload new avatar",
+      "uploadAvatar": "Upload avatar",
       "uploading": "Uploading…",
-      "removeAvatar": "Remove",
-      "avatarUploaded": "Avatar uploaded.",
-      "avatarUploadError": "Could not upload avatar.",
-      "languageHint": "Changing language will prompt a reload after saving.",
-      "reloadForLanguage": "Language changed. Reload now to apply?"
+      "removeAvatar": "Remove avatar",
+      "avatarUploaded": "Avatar uploaded!",
+      "avatarUploadError": "Failed to upload avatar.",
+      "languageHint": "Changing language will prompt a reload.",
+      "reloadForLanguage": "Language changed. Reload now?",
+      "emailLocked": "Email is managed by the system",
+      "countryPlaceholder": "Portugal"
     },
     "fields": {
       "name": "Name",
       "surname": "Surname",
+      "email": "Email",
       "languagePreference": "Language",
+      "gender": "Gender",
+      "birthDate": "Birth date",
       "profilePictureUrl": "Profile picture URL",
-      "phoneNumber": "Phone number",
+      "phoneNumber": "Phone",
       "addressLine1": "Address line 1",
       "addressLine2": "Address line 2",
       "city": "City",
       "stateProvince": "State/Province",
-      "postalCode": "Postal code",
+      "postalCode": "Postal/ZIP",
       "country": "Country",
       "emergencyContactName": "Emergency contact name",
       "emergencyContactPhone": "Emergency contact phone",
-      "emergencyContactRelationship": "Emergency contact relationship",
+      "emergencyContactRelationship": "Emergency relationship",
       "allergies": "Allergies",
       "medicalConditions": "Medical conditions"
     },
@@ -248,12 +263,19 @@
       "instructions": "Use at least 8 characters with letters and numbers, at least 1 uppercase letter, and at least 1 symbol (e.g., @). Minimum strength score required: 7/10.",
       "strength": "Strength: {{score}} / 10",
       "tooWeak": "Password is too weak. Please make it stronger (≥ 7/10)."
+    },
+    "validation": {
+      "emailInvalid": "Please enter a valid email.",
+      "phoneInvalid": "Please enter a valid phone number.",
+      "emergencyPhoneInvalid": "Please enter a valid emergency phone.",
+      "postalInvalid": "Please enter a valid postal/ZIP code."
     }
   },
   "common": {
     "save": "Save",
     "saving": "Saving…",
-    "reset": "Reset"
+    "reset": "Reset",
+    "close": "Close"
   },
   "dummy": {
     "authRequired": "You must be logged in to access the dashboard.",
@@ -338,6 +360,8 @@
   },
   "alertsPage": {
     "title": "Your alerts",
+    "loading": "Loading…",
+    "empty": "No alerts found",
     "filter": {
       "label": "Severity",
       "all": "All severities",
@@ -349,34 +373,57 @@
     },
     "actions": {
       "markAllRead": "Mark all as read",
-      "archiveAllRead": "Archive all read"
+      "archiveAllRead": "Archive all read",
+      "archiveAll": "Archive all",
+      "viewAlert": "View alert"
+    },
+    "filters": {
+      "view": "View",
+      "all": "All",
+      "unread": "Unread",
+      "read": "Read",
+      "archived": "Archived",
+      "severity": "Severity",
+      "pageSize": "Page size"
     },
     "table": {
       "title": "Title",
       "severity": "Severity",
       "body": "Body",
       "createdAt": "Created at",
-      "status": "Status"
+      "status": "Status",
+      "created": "Created"
     },
     "status": {
       "read": "Read"
+    },
+    "row": {
+      "expires": "Expires",
+      "readAt": "Read at",
+      "archivedAt": "Archived at",
+      "archived": "Archived",
+      "read": "Read",
+      "unread": "Unread"
     },
     "pager": {
       "summary": "{{from}}–{{to}} of {{total}}",
       "prev": "Prev",
       "next": "Next",
-      "pageOf": "Page {{page}} of {{totalPages}}"
+      "pageOf": "Page {{page}} of {{totalPages}}",
+      "pageXofY": "Page {{x}} of {{y}}"
     },
     "toast": {
       "detailError": "Could not load alert details.",
       "markedRead": "Marked as read.",
       "markReadError": "Failed to mark as read.",
       "unexpectedShape": "Unexpected response shape.",
-      "fetchError": "Could not load alerts.",
+      "fetchError": "Failed to load alerts",
       "markAllReadOk": "Marked all as read",
       "markAllReadError": "Could not mark all as read",
       "archiveAllOk": "Archived read alerts",
-      "archiveAllError": "Could not archive read alerts"
+      "archiveAllError": "Could not archive read alerts",
+      "markedAllRead": "All visible alerts marked as read",
+      "archivedAll": "All alerts archived"
     },
     "detail": {
       "noData": "No details available.",
@@ -387,6 +434,30 @@
     "title": "Alert details",
     "markRead": "Mark as read",
     "openInAlerts": "Open in Alerts",
-    "close": "Close"
+    "close": "Close",
+    "fetchError": "Failed to load alert details",
+    "noBody": "No details",
+    "readAt": "Read at",
+    "archivedAt": "Archived at",
+    "expiresAt": "Expires at",
+    "markUnread": "Mark as unread",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "markedUnread": "Marked as unread",
+    "markUnreadError": "Failed to mark as unread",
+    "archived": "Archived",
+    "archiveError": "Failed to archive",
+    "unarchived": "Unarchived",
+    "unarchiveError": "Failed to unarchive"
+  },
+  "alertsBell": {
+    "title": "Alerts",
+    "newAlert": "New alert!",
+    "header": "Notifications",
+    "viewAll": "View all",
+    "empty": "No recent alerts",
+    "ago": "ago",
+    "open": "Open details",
+    "footer": "Updates automatically"
   }
 }

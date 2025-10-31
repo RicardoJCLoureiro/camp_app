@@ -1,4 +1,3 @@
-// app/dashboard/components/SlidingMenu.tsx
 'use client';
 
 import React, { useMemo, useCallback } from 'react';
@@ -91,6 +90,7 @@ export default function SlidingMenu({ isOpen, onClose }: SlidingMenuProps) {
     components: [
       { name: 'Overview', href: '/dashboard' },
       { name: 'User details', href: '/dashboard/users/details' },
+      { name: 'Alerts', href: '/dashboard/alerts' },          // 👈 Added Alerts entry
       { name: 'Change password', href: '/dashboard', openModal: true },
     ],
   }), []);
@@ -98,7 +98,7 @@ export default function SlidingMenu({ isOpen, onClose }: SlidingMenuProps) {
   const sessionSection: MenuModule = useMemo(() => ({
     moduleName: 'Session',
     components: [
-      { name: 'Log Out', onClick: handleLogout }, // 🔴 logout here
+      { name: 'Log Out', onClick: handleLogout },
     ],
   }), [handleLogout]);
 

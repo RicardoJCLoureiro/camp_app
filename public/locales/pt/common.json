@@ -5,12 +5,12 @@
     "usernamePlaceholder": "Introduza o seu nome de utilizador",
     "passwordLabel": "Palavra-passe",
     "passwordPlaceholder": "Introduza a sua palavra-passe",
-    "submit": "Entrar",
-    "loading": "A entrar…",
+    "submit": "Iniciar sessão",
+    "loading": "A iniciar sessão…",
     "success": "Sessão iniciada com sucesso!",
-    "failure": "Falha no login. Por favor, tente novamente.",
+    "failure": "Falha no início de sessão. Por favor, tente novamente.",
     "emailNotFound": "Esse endereço de email não está registado.",
-    "wrongPassword": "A palavra-passe que introduziu está incorreta.",
+    "wrongPassword": "A palavra-passe introduzida está incorreta.",
     "unexpectedError": "Ocorreu um erro inesperado. Por favor, tente mais tarde.",
     "missingEmail": "Por favor, introduza o seu email.",
     "forgotPassword": "Esqueceu-se da palavra-passe?",
@@ -18,57 +18,57 @@
     "mfaCodeLabel": "Código do autenticador",
     "mfaCodePlaceholder": "123456",
     "verifyMfa": "Verificar código",
-    "backToCredentials": "Voltar ao login",
+    "backToCredentials": "Voltar ao início de sessão",
     "scanMfaQr": "Digitalize este código QR na sua aplicação de autenticação",
     "scanMfaQrInstructions": "Abra a sua aplicação de autenticação e digitalize o código QR abaixo",
     "manualEntryKey": "Ou introduza esta chave manualmente",
     "next": "Continuar"
   },
   "forgotPassword": {
-    "header": "Redefinir a sua palavra-passe",
+    "header": "Reponha a sua palavra-passe",
     "emailLabel": "Email",
     "emailPlaceholder": "Introduza o seu email",
-    "submit": "Enviar link de redefinição",
-    "backToLogin": "Voltar ao login",
-    "resetLinkSent": "Se existir uma conta com esse email, um link de redefinição foi enviado.",
+    "submit": "Enviar link de reposição",
+    "backToLogin": "Voltar ao início de sessão",
+    "resetLinkSent": "Se existir uma conta com esse email, um link de reposição foi enviado.",
     "tooManyRequests": "Demasiados pedidos. Por favor, tente novamente mais tarde.",
     "unexpectedError": "Ocorreu um erro. Por favor, tente novamente mais tarde."
   },
   "forgotPasswordReq": {
-    "header": "Redefinir a sua palavra-passe",
-    "newPasswordLabel": "Nova Palavra-passe",
+    "header": "Reponha a sua palavra-passe",
+    "newPasswordLabel": "Nova palavra-passe",
     "newPasswordPlaceholder": "Introduza a sua nova palavra-passe",
-    "confirmPasswordLabel": "Confirmar Palavra-passe",
-    "confirmPasswordPlaceholder": "Volte a introduzir a sua nova palavra-passe",
+    "confirmPasswordLabel": "Confirmar palavra-passe",
+    "confirmPasswordPlaceholder": "Reintroduza a sua nova palavra-passe",
     "mfaCodeLabel": "Código do autenticador",
     "mfaCodePlaceholder": "123456",
     "complexityLabel": "Força da palavra-passe",
-    "loadingButton": "A redefinir…",
-    "resetButton": "Redefinir Palavra-passe",
+    "loadingButton": "A repor…",
+    "resetButton": "Repor palavra-passe",
     "missingFields": "Por favor, preencha todos os campos.",
     "passwordMismatch": "As palavras-passe não coincidem.",
     "weakPassword": "A sua palavra-passe é demasiado fraca (mín. 7/10 necessário).",
-    "invalidOrExpiredToken": "Este link de redefinição é inválido ou expirou. Por favor, solicite um novo.",
+    "invalidOrExpiredToken": "Este link de reposição é inválido ou expirou. Por favor, solicite um novo.",
     "mfaNotSetup": "MFA não está configurado para a sua conta.",
     "invalidMfaCode": "Código de autenticação inválido.",
     "unexpectedError": "Ocorreu um erro inesperado. Por favor, tente novamente.",
-    "success": "A sua palavra-passe foi redefinida com sucesso!",
-    "resetFailed": "Falha na redefinição da palavra-passe. Por favor, tente novamente."
+    "success": "A sua palavra-passe foi reposta com sucesso!",
+    "resetFailed": "Falha na reposição da palavra-passe. Por favor, tente novamente."
   },
   "sessionWarningModal": {
     "header": "A sua sessão está prestes a expirar",
     "body": "A sua sessão irá expirar em breve. Deseja estendê-la?",
     "timeRemaining": "Tempo restante",
-    "extendSession": "Estender Sessão",
+    "extendSession": "Estender sessão",
     "logout": "Terminar sessão",
     "inactivityHeader": "Ainda está aí?",
     "redirectMessage": "Esteve inativo e a sua sessão será terminada em breve.",
-    "stay": "Manter Sessão Iniciada",
+    "stay": "Manter sessão iniciada",
     "expiredToast": "A sua sessão expirou. Por favor, inicie sessão novamente.",
-    "inactivityToast": "A sua sessão foi terminada devido à inatividade."
+    "inactivityToast": "A sua sessão foi terminada devido a inatividade."
   },
   "auth": {
-    "requiredToast": "Deve estar autenticado para aceder ao painel de controlo.",
+    "requiredToast": "Deve iniciar sessão para aceder ao painel de controlo.",
     "loggedOutToast": "A sua sessão foi terminada."
   },
   "menu": {
@@ -81,7 +81,7 @@
   },
   "tooltip": {
     "edit": "Editar entidade",
-    "delete": "Eliminar entidade"
+    "delete": "Apagar entidade"
   },
   "newEntity": "Criar nova entidade",
   "createEntity": "Criar Nova Entidade",
@@ -94,7 +94,7 @@
   "noEntities": "Nenhuma entidade encontrada.",
   "createEntityPlaceholder": "Fluxo de criação de entidade iniciado (dev).",
   "editPlaceholder": "Editar “{name}” (dev).",
-  "deletePlaceholder": "Eliminar “{name}” (dev).",
+  "deletePlaceholder": "Apagar “{name}” (dev).",
   "entitiesFetchError": "Falha ao carregar entidades. Por favor, tente novamente.",
   "entityCreated": "Entidade criada com sucesso",
   "entityCreateError": "Falha ao criar entidade",
@@ -105,22 +105,22 @@
     "step3": "Administrador",
     "step4": "Permissões",
     "stepIncomplete": "Por favor, preencha os campos obrigatórios",
-    "finished": "Assistente concluído (sem chamada à API ainda)",
+    "finished": "Assistente concluído (ainda sem chamada à API)",
     "uploadOk": "Imagem carregada."
   },
   "details": {
-    "address": "Endereço",
-    "zip": "Código Postal",
+    "address": "Morada",
+    "zip": "Código postal",
     "city": "Cidade",
     "country": "País",
-    "phone": "Telefone de Contacto",
-    "imageUrl": "URL do Logotipo / Imagem",
-    "siteUrl": "URL do Site Oficial",
-    "contactEmail": "Email de Contacto",
-    "billingEmail": "Email de Faturação",
+    "phone": "Telefone de contacto",
+    "imageUrl": "URL do Logótipo / Imagem",
+    "siteUrl": "URL do site oficial",
+    "contactEmail": "Email de contacto",
+    "billingEmail": "Email de faturação",
     "copyContact": "Usar email de contacto para faturação",
     "chairman": "Presidente",
-    "chairmanImg": "URL da foto do Presidente"
+    "chairmanImg": "URL da foto do presidente"
   },
   "admin": {
     "firstName": "Primeiro nome",
@@ -130,7 +130,7 @@
     "confirm": "Confirmar palavra-passe"
   },
   "permissions": {
-    "placeholder": "A UI de atribuição de Função / Permissão vem a seguir 🙂"
+    "placeholder": "A UI de atribuição de função / permissão é a seguir 🙂"
   },
   "previous": "Anterior",
   "next": "Próximo",
@@ -147,7 +147,7 @@
   "createPlaceholder": "Começar a criar um novo utilizador",
   "view": "Ver",
   "edit": "Editar",
-  "delete": "Eliminar",
+  "delete": "Apagar",
   "pageInfo": "Página {{page}} de {{total}}",
   "prev": "Anterior",
   "userDetails": "Detalhes do Utilizador",
@@ -159,15 +159,15 @@
   "birthDate": "Data de Nascimento",
   "gender": "Género",
   "identityNumber": "Número de Identidade",
-  "bloodType": "Grupo Sanguíneo",
-  "addressLine1": "Morada Linha 1",
-  "addressLine2": "Morada Linha 2",
+  "bloodType": "Tipo de Sangue",
+  "addressLine1": "Endereço Linha 1",
+  "addressLine2": "Endereço Linha 2",
   "stateProvince": "Estado / Província",
   "postalCode": "Código Postal",
   "country": "País",
-  "emergencyContactName": "Nome do Contacto de Emergência",
-  "emergencyContactPhone": "Telefone do Contacto de Emergência",
-  "emergencyContactRelationship": "Relação do Contacto de Emergência",
+  "emergencyContactName": "Nome de Contacto de Emergência",
+  "emergencyContactPhone": "Telefone de Contacto de Emergência",
+  "emergencyContactRelationship": "Relação de Contacto de Emergência",
   "allergies": "Alergias",
   "medicalConditions": "Condições Médicas",
   "languages": {
@@ -178,7 +178,7 @@
     "zh": "Chinês"
   },
   "alt": {
-    "logo": "Logotipo",
+    "logo": "Logótipo",
     "ball": "Bola",
     "redCard": "Cartão Vermelho",
     "whistle": "Apito",
@@ -194,48 +194,57 @@
     "closeMenu": "Fechar menu",
     "avatarAlt": "Avatar do utilizador",
     "refresh": "Atualizar",
-    "logout": "Terminar Sessão",
+    "logout": "Terminar sessão",
     "menu": {
       "users": "Utilizadores",
+      "session": "Sessão",
+      "overview": "Visão geral",
       "user-details": "Detalhes do utilizador",
-      "change-password": "Alterar palavra-passe"
+      "alerts": "Alertas",
+      "change-password": "Mudar palavra-passe",
+      "log-out": "Terminar sessão"
     }
   },
   "users": {
     "details": {
-      "title": "O seu perfil",
-      "loadError": "Não foi possível carregar os seus detalhes.",
-      "saved": "Perfil atualizado.",
-      "saveError": "Não foi possível guardar as alterações.",
-      "noChanges": "Nenhuma alteração para guardar.",
-      "uploadAvatar": "Carregar novo avatar",
+      "title": "Detalhes do utilizador",
+      "loadError": "Falha ao carregar os detalhes do utilizador.",
+      "saved": "Perfil guardado.",
+      "saveError": "Falha ao guardar o perfil.",
+      "noChanges": "Nenhuma alteração a guardar.",
+      "uploadAvatar": "Carregar avatar",
       "uploading": "A carregar…",
-      "removeAvatar": "Remover",
-      "avatarUploaded": "Avatar carregado.",
-      "avatarUploadError": "Não foi possível carregar o avatar.",
-      "languageHint": "A alteração do idioma irá solicitar um recarregamento após guardar.",
-      "reloadForLanguage": "Idioma alterado. Recarregar agora para aplicar?"
+      "removeAvatar": "Remover avatar",
+      "avatarUploaded": "Avatar carregado!",
+      "avatarUploadError": "Falha ao carregar o avatar.",
+      "languageHint": "Mudar o idioma irá provocar um recarregamento.",
+      "reloadForLanguage": "Idioma alterado. Recarregar agora?",
+      "emailLocked": "O email é gerido pelo sistema",
+      "countryPlaceholder": "Portugal"
     },
     "fields": {
       "name": "Nome",
       "surname": "Apelido",
+      "email": "Email",
       "languagePreference": "Idioma",
+      "gender": "Género",
+      "birthDate": "Data de nascimento",
       "profilePictureUrl": "URL da imagem de perfil",
-      "phoneNumber": "Número de telefone",
-      "addressLine1": "Morada linha 1",
-      "addressLine2": "Morada linha 2",
+      "phoneNumber": "Telefone",
+      "addressLine1": "Endereço linha 1",
+      "addressLine2": "Endereço linha 2",
       "city": "Cidade",
       "stateProvince": "Estado/Província",
-      "postalCode": "Código Postal",
+      "postalCode": "Código postal",
       "country": "País",
       "emergencyContactName": "Nome do contacto de emergência",
       "emergencyContactPhone": "Telefone do contacto de emergência",
-      "emergencyContactRelationship": "Relação do contacto de emergência",
+      "emergencyContactRelationship": "Relação de emergência",
       "allergies": "Alergias",
       "medicalConditions": "Condições médicas"
     },
     "password": {
-      "title": "Alterar palavra-passe",
+      "title": "Mudar palavra-passe",
       "current": "Palavra-passe atual",
       "new": "Nova palavra-passe",
       "confirm": "Confirmar nova palavra-passe",
@@ -243,22 +252,29 @@
       "mismatch": "A nova palavra-passe e a confirmação não coincidem.",
       "changed": "Palavra-passe alterada com sucesso.",
       "invalidCurrent": "A sua palavra-passe atual está incorreta.",
-      "error": "Não foi possível alterar a palavra-passe.",
+      "error": "Não foi possível mudar a palavra-passe.",
       "instructions": "Use pelo menos 8 caracteres com letras e números, pelo menos 1 letra maiúscula e pelo menos 1 símbolo (ex., @). Pontuação mínima de força necessária: 7/10.",
       "strength": "Força: {{score}} / 10",
       "tooWeak": "A palavra-passe é demasiado fraca. Por favor, torne-a mais forte (≥ 7/10)."
+    },
+    "validation": {
+      "emailInvalid": "Por favor, introduza um email válido.",
+      "phoneInvalid": "Por favor, introduza um número de telefone válido.",
+      "emergencyPhoneInvalid": "Por favor, introduza um telefone de emergência válido.",
+      "postalInvalid": "Por favor, introduza um código postal válido."
     }
   },
   "common": {
     "save": "Guardar",
     "saving": "A guardar…",
-    "reset": "Redefinir"
+    "reset": "Repor",
+    "close": "Fechar"
   },
   "dummy": {
-    "authRequired": "Deve estar autenticado para aceder ao painel de controlo.",
+    "authRequired": "Deve iniciar sessão para aceder ao painel de controlo.",
     "header": {
-      "title": "Visão Geral",
-      "subtitle": "Este é um painel de controlo de exemplo com dados fictícios."
+      "title": "Visão geral",
+      "subtitle": "Este é um painel de controlo de amostra com dados simulados."
     },
     "actions": {
       "export": "Exportar",
@@ -276,7 +292,7 @@
         "delta": "+8.9%"
       },
       "issues": {
-        "title": "Problemas abertos",
+        "title": "Problemas em aberto",
         "value": "12",
         "sublabel": "triados",
         "delta": "−2 desde ontem"
@@ -303,16 +319,138 @@
       "legend": "Receita"
     },
     "whatsNew": {
-      "title": "O que há de novo",
+      "title": "Novidades",
       "item1": { "title": "Registo de auditoria", "body": "Adicionámos mais detalhes a cada alteração." },
-      "item2": { "title": "Relatórios mais rápidos", "body": "O processamento em segundo plano melhorou 30%." },
-      "item3": { "title": "Novas integrações", "body": "Conecte-se com mais ferramentas de terceiros." }
+      "item2": { "title": "Relatórios mais rápidos", "body": "Processamento em segundo plano melhorado em 30%." },
+      "item3": { "title": "Novas integrações", "body": "Ligue-se a mais ferramentas de terceiros." }
     },
     "quickActions": {
       "title": "Ações rápidas",
-      "openIssues": "Problemas abertos",
+      "openIssues": "Problemas em aberto",
       "monthlyReport": "Relatório mensal",
-      "helper": "Atalhos para ações usadas com frequência."
+      "helper": "Atalhos para ações usadas frequentemente."
     }
+  },
+  "alerts": {
+    "title": "Alertas",
+    "refresh": "Atualizar",
+    "noAlerts": "Sem alertas",
+    "viewAll": "Ver tudo",
+    "loading": "A carregar…",
+    "ago": "há",
+    "new": "NOVO",
+    "toast": {
+      "critical": "Alerta crítico: {{title}}",
+      "warning": "Aviso: {{title}}",
+      "info": "Informação: {{title}}",
+      "more": "{{count}} alerta{{pluralSuffix}} novo{{pluralSuffix}}…"
+    }
+  },
+  "severity": {
+    "info": "Informação",
+    "warning": "Aviso",
+    "critical": "Crítico"
+  },
+  "alertsPage": {
+    "title": "Os seus alertas",
+    "loading": "A carregar…",
+    "empty": "Nenhum alerta encontrado",
+    "filter": {
+      "label": "Gravidade",
+      "all": "Todas as gravidades",
+      "status": "Estado",
+      "statusActive": "Ativos",
+      "statusArchived": "Arquivados",
+      "statusAll": "Todos",
+      "statusUnread": "Não lidos"
+    },
+    "actions": {
+      "markAllRead": "Marcar tudo como lido",
+      "archiveAllRead": "Arquivar todos os lidos",
+      "archiveAll": "Arquivar tudo",
+      "viewAlert": "Ver alerta"
+    },
+    "filters": {
+      "view": "Ver",
+      "all": "Todos",
+      "unread": "Não lidos",
+      "read": "Lidos",
+      "archived": "Arquivados",
+      "severity": "Gravidade",
+      "pageSize": "Tamanho da página"
+    },
+    "table": {
+      "title": "Título",
+      "severity": "Gravidade",
+      "body": "Corpo",
+      "createdAt": "Criado em",
+      "status": "Estado",
+      "created": "Criado"
+    },
+    "status": {
+      "read": "Lido"
+    },
+    "row": {
+      "expires": "Expira",
+      "readAt": "Lido em",
+      "archivedAt": "Arquivado em",
+      "archived": "Arquivado",
+      "read": "Lido",
+      "unread": "Não lido"
+    },
+    "pager": {
+      "summary": "{{from}}–{{to}} de {{total}}",
+      "prev": "Anterior",
+      "next": "Próximo",
+      "pageOf": "Página {{page}} de {{totalPages}}",
+      "pageXofY": "Página {{x}} de {{y}}"
+    },
+    "toast": {
+      "detailError": "Não foi possível carregar os detalhes do alerta.",
+      "markedRead": "Marcado como lido.",
+      "markReadError": "Falha ao marcar como lido.",
+      "unexpectedShape": "Formato de resposta inesperado.",
+      "fetchError": "Falha ao carregar alertas",
+      "markAllReadOk": "Tudo marcado como lido",
+      "markAllReadError": "Não foi possível marcar tudo como lido",
+      "archiveAllOk": "Alertas lidos arquivados",
+      "archiveAllError": "Não foi possível arquivar os alertas lidos",
+      "markedAllRead": "Todos os alertas visíveis marcados como lidos",
+      "archivedAll": "Todos os alertas arquivados"
+    },
+    "detail": {
+      "noData": "Nenhum detalhe disponível.",
+      "noContent": "Nenhum conteúdo adicional."
+    }
+  },
+  "alertModal": {
+    "title": "Detalhes do alerta",
+    "markRead": "Marcar como lido",
+    "openInAlerts": "Abrir em Alertas",
+    "close": "Fechar",
+    "fetchError": "Falha ao carregar os detalhes do alerta",
+    "noBody": "Sem detalhes",
+    "readAt": "Lido em",
+    "archivedAt": "Arquivado em",
+    "expiresAt": "Expira em",
+    "markUnread": "Marcar como não lido",
+    "archive": "Arquivar",
+    "unarchive": "Desarquivar",
+    "markedUnread": "Marcado como não lido",
+    "markUnreadError": "Falha ao marcar como não lido",
+    "archived": "Arquivado",
+    "archiveError": "Falha ao arquivar",
+    "unarchived": "Desarquivado",
+    "unarchiveError": "Falha ao desarquivar"
+  },
+  "alertsBell": {
+    "title": "Alertas",
+    "newAlert": "Novo alerta!",
+    "header": "Notificações",
+    "viewAll": "Ver tudo",
+    "empty": "Nenhum alerta recente",
+    "ago": "há",
+    "open": "Abrir detalhes",
+    "footer": "Atualiza automaticamente"
   }
 }
